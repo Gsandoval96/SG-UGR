@@ -37,7 +37,7 @@ class MySphere extends THREE.Object3D {
     // Estas lineas son las que añaden los componentes de la interfaz
     // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
-    folder.add (this.guiControls, 'radius', 0.1, 5.0, 0.1).name ('Radio : ').listen();
+    folder.add (this.guiControls, 'radius', 0.1, 5.0, 0.1).name ('Radio : ').onChange(function(value){that.crearNueva()});
     folder.add (this.guiControls, 'segments', 3.0, 60.0, 1.0).name ('Nº Segmentos : ').onChange(function(value){that.crearNueva()});
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
   }
@@ -45,8 +45,6 @@ class MySphere extends THREE.Object3D {
   crearNueva(){
     var sphereGeom = new THREE.SphereGeometry( this.guiControls.radius,this.guiControls.segments, this.guiControls.segments);
     this.sphere.geometry = sphereGeom;
-    console.log(this.guiControls.radius);
-    console.log(this.guiControls.segments);
   }
 
   update () {
@@ -59,7 +57,7 @@ class MySphere extends THREE.Object3D {
     // Y por último la traslación
     //this.position.set (this.guiControls.posX,this.guiControls.posY,this.guiControls.posZ);
     //this.rotation.set (this.guiControls.rotX,this.guiControls.rotY,this.guiControls.rotZ);
-    this.scale.set(2*this.guiControls.radius,2*this.guiControls.radius,2*this.guiControls.radius);
+    //this.scale.set(2*this.guiControls.radius,2*this.guiControls.radius,2*this.guiControls.radius);
   }
 
 

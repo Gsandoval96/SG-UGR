@@ -9,7 +9,7 @@ class MyIcosahedron extends THREE.Object3D {
     // Un Mesh se compone de geometría y material
     var icosahedronGeom = new THREE.IcosahedronGeometry( 1.0);
     // Como material se crea uno a partir de un color
-    var icosahedronMat = new THREE.MeshPhongMaterial({color: 0x00CFCF});
+    var icosahedronMat = new THREE.MeshPhongMaterial({color: 0xCF0000});
 
     // Ya podemos construir el Mesh
     this.icosahedron = new THREE.Mesh (icosahedronGeom, icosahedronMat);

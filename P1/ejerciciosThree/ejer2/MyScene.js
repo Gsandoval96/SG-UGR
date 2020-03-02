@@ -48,10 +48,19 @@ class MyScene extends THREE.Scene {
     this.sphere.position.y = -6.0;
     this.add (this.sphere);
 
+    this.torus = new MyTorus(this.gui, "Controles del Toro");
+    this.torus.position.y = 6.0;
+    this.add (this.torus);
+
     this.icosahedron = new MyIcosahedron(this.gui, "Controles del Icosaedro");
     this.icosahedron.position.x = -6.0;
     this.icosahedron.position.y = -6.0;
     this.add (this.icosahedron);
+
+    this.dodecahedron = new MyDodecahedron(this.gui, "Controles del Dodecaedro");
+    this.dodecahedron.position.x = 6.0;
+    this.dodecahedron.position.y = -6.0;
+    this.add (this.dodecahedron);
   }
 
   createCamera () {
@@ -185,6 +194,8 @@ class MyScene extends THREE.Scene {
     this.cylinder.update();
     this.sphere.update();
     this.icosahedron.update();
+    this.torus.update();
+    this.dodecahedron.update();
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());

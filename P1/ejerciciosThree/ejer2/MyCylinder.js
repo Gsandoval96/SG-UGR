@@ -7,7 +7,7 @@ class MyCylinder extends THREE.Object3D {
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
     this.createGUI(gui,titleGui);
     // Un Mesh se compone de geometría y material
-    var cylinderGeom = new THREE.CylinderGeometry( 0.5, 0.5, 1.0, 8.0);
+    var cylinderGeom = new THREE.CylinderGeometry( 0.5, 0.5, 1.0, 3.0);
     // Como material se crea uno a partir de un color
     var cylinderMat = new THREE.MeshPhongMaterial({color: 0xCFCF00});
 
@@ -22,14 +22,14 @@ class MyCylinder extends THREE.Object3D {
     this.guiControls = new function () {
       this.radius = 0.5;
       this.height = 1.0;
-      this.segments = 8.0;
+      this.segments = 3.0;
 
       // Un botón para dejarlo todo en su posición inicial
       // Cuando se pulse se ejecutará esta función.
       this.reset = function () {
         this.radius = 0.5;
         this.height = 1.0;
-        this.segments = 8.0;
+        this.segments = 3.0;
       }
     }
 
@@ -39,8 +39,8 @@ class MyCylinder extends THREE.Object3D {
     // Estas lineas son las que añaden los componentes de la interfaz
     // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
-    folder.add (this.guiControls, 'radius', 0.1, 5.0, 0.1).name ('Radio : ').listen();
-    folder.add (this.guiControls, 'height', 0.1, 5.0, 0.1).name ('Altura : ').listen();
+    folder.add (this.guiControls, 'radius', 0.1, 5.0, 0.1).name ('Radio : ').onChange(function(value){that.crearNueva()});
+    folder.add (this.guiControls, 'height', 0.1, 5.0, 0.1).name ('Altura : ').onChange(function(value){that.crearNueva()});
     folder.add (this.guiControls, 'segments', 3.0, 20.0, 1.0).name ('Nº Segmentos : ').onChange(function(value){that.crearNueva()});
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
   }
@@ -48,9 +48,6 @@ class MyCylinder extends THREE.Object3D {
   crearNueva(){
     var cylinderGeom = new THREE.CylinderGeometry( this.guiControls.radius,this.guiControls.radius, this.guiControls.height, this.guiControls.segments);
     this.cylinder.geometry = cylinderGeom;
-    console.log(this.guiControls.radius);
-    console.log(this.guiControls.height);
-    console.log(this.guiControls.segments);
   }
 
   update () {
@@ -63,7 +60,7 @@ class MyCylinder extends THREE.Object3D {
     // Y por último la traslación
     //this.position.set (this.guiControls.posX,this.guiControls.posY,this.guiControls.posZ);
     //this.rotation.set (this.guiControls.rotX,this.guiControls.rotY,this.guiControls.rotZ);
-    this.scale.set(2*this.guiControls.radius,this.guiControls.height,2*this.guiControls.radius);
+    //this.scale.set(2*this.guiControls.radius,this.guiControls.height,2*this.guiControls.radius);
   }
 
 
