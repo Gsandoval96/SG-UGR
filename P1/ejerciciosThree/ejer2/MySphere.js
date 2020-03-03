@@ -9,7 +9,7 @@ class MySphere extends THREE.Object3D {
     // Un Mesh se compone de geometría y material
     var sphereGeom = new THREE.SphereGeometry( 0.5, 20.0, 20.0);
     // Como material se crea uno a partir de un color
-    var sphereMat = new THREE.MeshPhongMaterial({color: 0x0000CF});
+    var sphereMat = new THREE.MeshPhongMaterial({color: 0x000000});
 
     // Ya podemos construir el Mesh
     this.sphere = new THREE.Mesh (sphereGeom, sphereMat);
@@ -49,6 +49,9 @@ class MySphere extends THREE.Object3D {
 
   update () {
     this.rotation.y += 0.01;
+    this.sphere.material.color.g = (this.sphere.material.color.g + 0.01)%1;
+    this.sphere.material.color.r = (this.sphere.material.color.r + 0.02)%1;
+    this.sphere.material.color.b = (this.sphere.material.color.b + 0.03)%1;
     // Con independencia de cómo se escriban las 3 siguientes líneas, el orden en el que se aplican las transformaciones es:
     // Primero, el escalado
     // Segundo, la rotación en Z
