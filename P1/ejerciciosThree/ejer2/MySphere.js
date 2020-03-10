@@ -49,9 +49,9 @@ class MySphere extends THREE.Object3D {
 
   update () {
     this.rotation.y += 0.01;
-    this.sphere.material.color.g = this.sphere.material.color.g + 0.01;
-    this.sphere.material.color.r = this.sphere.material.color.r + 0.02;
-    this.sphere.material.color.b = this.sphere.material.color.b + 0.03;
+    this.sphere.material.color.g = (this.sphere.material.color.g + 0.005)%1;
+    this.sphere.material.color.r = (this.sphere.material.color.r + 0.01)%1;
+    this.sphere.material.color.b = (this.sphere.material.color.b + 0.02)%1;
     // Con independencia de cómo se escriban las 3 siguientes líneas, el orden en el que se aplican las transformaciones es:
     // Primero, el escalado
     // Segundo, la rotación en Z
