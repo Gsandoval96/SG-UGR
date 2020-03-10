@@ -8,44 +8,48 @@ class MyRevol extends THREE.Object3D {
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
     this.createGUI(gui,titleGui);
 
-    var points = [];
+    this.points = [];
     for ( var i = 0; i < 10; i ++ ) {
-    	points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 5 ) * 2 ) );
+    	this.points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 10 ) * 2 ) );
     }
-    var geometry = new THREE.LatheGeometry( points );
-    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-    var revol = new THREE.Mesh( geometry, material );
+    var revolGeom = new THREE.LatheGeometry( this.points, 12, 0, 2*Math.PI );
+    var texture = new THREE.TextureLoader().load('../imgs/marmol-blanco.jpg');
+    var revolMat = new THREE.MeshPhongMaterial ({map: texture});
+    revolMat.side =  THREE.DoubleSide;
+    this.revol = new THREE.Mesh( revolGeom, revolMat );
 
     // Y añadirlo como hijo del Object3D (el this)
-    this.add (revol);
+    this.add (this.revol);
   }
 
   createGUI (gui,titleGui) {
     // Controles para el tamaño, la orientación y la posición de la caja
     this.guiControls = new function () {
-      this.sizeX = 1.0;
-      this.sizeY = 1.0;
-      this.sizeZ = 1.0;
+      this.segments = 12.0;
+      this.radius = 1;
 
       // Un botón para dejarlo todo en su posición inicial
       // Cuando se pulse se ejecutará esta función.
       this.reset = function () {
-        this.sizeX = 1.0;
-        this.sizeY = 1.0;
-        this.sizeZ = 1.0;
+        this.segments = 12.0;
+        this.radius = 1;
       }
     }
 
     // Se crea una sección para los controles de la caja
     var folder = gui.addFolder (titleGui);
+    var that = this;
     // Estas lineas son las que añaden los componentes de la interfaz
     // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
-    folder.add (this.guiControls, 'sizeX', 0.1, 5.0, 0.1).name ('Tamaño X : ').listen();
-    folder.add (this.guiControls, 'sizeY', 0.1, 5.0, 0.1).name ('Tamaño Y : ').listen();
-    folder.add (this.guiControls, 'sizeZ', 0.1, 5.0, 0.1).name ('Tamaño Z : ').listen();
-
+    folder.add (this.guiControls, 'segments', 3.0, 20.0, 1.0).name ('Nº Segmentos : ').onChange(function(value){that.crearNueva()});
+    folder.add (this.guiControls, 'radius', 0.001, 1, 0.001).name ('Radio : ').onChange(function(value){that.crearNueva()});
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
+  }
+
+  crearNueva(){
+    var revolGeom = new THREE.LatheGeometry( this.points, this.guiControls.segments, 0, this.guiControls.radius*2*Math.PI );
+    this.revol.geometry = revolGeom;
   }
 
   update () {
@@ -58,6 +62,6 @@ class MyRevol extends THREE.Object3D {
     // Y por último la traslación
     //this.position.set (this.guiControls.posX,this.guiControls.posY,this.guiControls.posZ);
     //this.rotation.set (this.guiControls.rotX,this.guiControls.rotY,this.guiControls.rotZ);
-    this.scale.set (this.guiControls.sizeX,this.guiControls.sizeY,this.guiControls.sizeZ);
+    //this.scale.set (this.guiControls.sizeX,this.guiControls.sizeY,this.guiControls.sizeZ);
   }
 }
