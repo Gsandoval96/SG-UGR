@@ -23,32 +23,36 @@ class MyRevol extends THREE.Object3D {
   }
 
   createGUI (gui,titleGui) {
+
+    var that = this;
+
     // Controles para el tamaño, la orientación y la posición de la caja
     this.guiControls = new function () {
       this.segments = 12.0;
-      this.radius = 1;
+      this.radius = 1.0;
 
       // Un botón para dejarlo todo en su posición inicial
       // Cuando se pulse se ejecutará esta función.
       this.reset = function () {
         this.segments = 12.0;
-        this.radius = 1;
+        this.radius = 1.0;
+        that.crearNueva(this.segments, this.radius);
+        console.log("HOLA");
       }
     }
 
     // Se crea una sección para los controles de la caja
     var folder = gui.addFolder (titleGui);
-    var that = this;
     // Estas lineas son las que añaden los componentes de la interfaz
     // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
-    folder.add (this.guiControls, 'segments', 3.0, 20.0, 1.0).name ('Nº Segmentos : ').onChange(function(value){that.crearNueva()});
-    folder.add (this.guiControls, 'radius', 0.001, 1, 0.001).name ('Radio : ').onChange(function(value){that.crearNueva()});
+    folder.add (this.guiControls, 'segments', 3.0, 20.0, 1.0).name ('Nº Segmentos : ').onChange(function(value){that.crearNueva(that.guiControls.segments,that.guiControls.radius)});
+    folder.add (this.guiControls, 'radius', -0.001, 1, 0.001).name ('Radio : ').onChange(function(value){that.crearNueva(that.guiControls.segments, that.guiControls.radius)});
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
   }
 
-  crearNueva(){
-    var revolGeom = new THREE.LatheGeometry( this.points, this.guiControls.segments, 0, this.guiControls.radius*2*Math.PI );
+  crearNueva(segmentos, radio){
+    var revolGeom = new THREE.LatheGeometry( this.points, segmentos, 0, radio*2*Math.PI );
     this.revol.geometry = revolGeom;
   }
 
