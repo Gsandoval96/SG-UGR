@@ -31,20 +31,8 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.diamante = new MyDiamante(this.gui, "Controles del Objeto Diamante");
-    this.diamante.position.y = 10.0;
-    this.diamante.position.x = -10.0;
-    this.add (this.diamante);
-
-    this.corazon = new MyCorazon(this.gui, "Controles del Objeto Corazón");
-    this.corazon.position.y = -10.0;
-    this.corazon.position.x = 10.0;
-    this.add (this.corazon);
-
-    this.trebol = new MyTrebol(this.gui, "Controles del Objeto Trebol");
-    this.trebol.position.y = 8.0;
-    this.trebol.position.x = 8.0;
-    this.add (this.trebol);
+    this.spin = new MySpin(this.gui, "Controles de la Animación");
+    this.add (this.spin);
   }
 
   createCamera () {
@@ -172,10 +160,7 @@ class MyScene extends THREE.Scene {
     // Se actualiza la posición de la cámara según su controlador
     this.cameraControl.update();
 
-    // Se actualiza el resto del modelo
-    this.diamante.update();
-    this.corazon.update();
-    this.trebol.update();
+    this.spin.update();
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
