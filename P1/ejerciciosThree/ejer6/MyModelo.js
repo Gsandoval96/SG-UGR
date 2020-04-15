@@ -8,17 +8,17 @@ class MyModelo extends THREE.Object3D {
     var that = this;
     var materialLoader = new THREE.MTLLoader();
     var objectLoader = new THREE.OBJLoader();
-    materialLoader.load('../models/porsche911/911.mtl',
+    materialLoader.load('../models/IronMan/IronMan.mtl',
       function(materials){
         objectLoader.setMaterials(materials);
-        objectLoader.load('../models/porsche911/Porsche_911_GT2.obj',
+        objectLoader.load('../models/IronMan/IronMan.obj',
       function(object){
         var modelo = object;
         that.add (modelo);
       }, null, null);
     });
 
-    this.scale.set(4,4,4);
+    this.scale.set(0.04,0.04,0.04);
 
   }
 
