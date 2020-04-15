@@ -52,8 +52,6 @@ class MySpin extends THREE.Object3D {
       var folder = gui.addFolder (titleGui);
       // Y otro para mostrar u ocultar los ejes
       folder.add (this.guiControls, 'animacionOnOff').name ('Animación activa : ');
-
-      return gui;
   }
 
   update () {
