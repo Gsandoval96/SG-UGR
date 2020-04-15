@@ -29,7 +29,7 @@ class MyDiamante extends THREE.Object3D {
 
     //var texture = new THREE.TextureLoader().load('../imgs/marmol-blanco.jpg');
     //var diamanteMat = new THREE.MeshPhongMaterial ({map: texture});
-    var diamanteMat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    var diamanteMat = new THREE.MeshToonMaterial( { color: 0xff0000 } );
     diamanteMat.side =  THREE.DoubleSide;
 
     this.diamante = new THREE.Mesh( geometry, diamanteMat ) ;

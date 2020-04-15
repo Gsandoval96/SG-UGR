@@ -12,29 +12,34 @@ class MySpin extends THREE.Object3D {
     this.diamanteAB = new MyDiamante();
     this.corazonAB = new MyCorazon();
     this.trebolAB = new MyTrebol();
+    this.picaAB = new MyPica();
 
     //Nodo CD
     this.diamanteCD = new THREE.Object3D();
     this.corazonCD = new THREE.Object3D();
     this.trebolCD = new THREE.Object3D();
+    this.picaCD = new THREE.Object3D();
 
     this.diamanteCD.position.y = 13.0;
     this.corazonCD.position.y = -13.0;
     this.trebolCD.position.x = 13.0;
+    this.picaCD.position.x = -13.0;
 
     this.diamanteCD.add (this.diamanteAB);
     this.corazonCD.add (this.corazonAB);
     this.trebolCD.add (this.trebolAB);
+    this.picaCD.add (this.picaAB);
 
     //Nodo Final
     this.add (this.diamanteCD);
     this.add (this.corazonCD);
     this.add (this.trebolCD);
+    this.add (this.picaCD);
 
     }
 
 
-  createGUI (gui,titleGui) {
+    createGUI (gui,titleGui) {
 
     var that = this;
 
@@ -75,9 +80,11 @@ class MySpin extends THREE.Object3D {
     this.diamanteCD.rotation.z -= 0.01;
     this.corazonCD.rotation.z -= 0.01;
     this.trebolCD.rotation.z -= 0.01;
+    this.picaCD.rotation.z -= 0.01;
 
     this.diamanteAB.rotation.y += 0.01;
     this.corazonAB.rotation.y += 0.01;
     this.trebolAB.rotation.y += 0.01;
+    this.picaAB.rotation.y += 0.01;
   }
 }

@@ -34,6 +34,8 @@ class MyScene extends THREE.Scene {
     this.spin = new MySpin(this.gui, "Controles de la Animación");
     this.add (this.spin);
 
+
+
   }
 
   createCamera () {
@@ -99,7 +101,7 @@ class MyScene extends THREE.Scene {
     // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
     this.spotLight = new THREE.SpotLight( 0xffffff, this.guiControls.lightIntensity );
-    this.spotLight.position.set( 0, 200, 0 );
+    this.spotLight.position.set( 0, 100, 0 );
     this.add (this.spotLight);
   }
 

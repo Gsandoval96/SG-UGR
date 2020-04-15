@@ -24,7 +24,7 @@ class MyCorazon extends THREE.Object3D {
 
     //var texture = new THREE.TextureLoader().load('../imgs/marmol-blanco.jpg');
     //var corazonMat = new THREE.MeshPhongMaterial ({map: texture});
-    var corazonMat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    var corazonMat = new THREE.MeshToonMaterial( { color: 0xff0000 } );
     corazonMat.side =  THREE.DoubleSide;
 
     this.corazon = new THREE.Mesh( geometry, corazonMat ) ;
