@@ -4,9 +4,9 @@ class MyTrebol extends THREE.Object3D {
   constructor() {
     super();
 
-    var cirCentral = this.crearCirculo (0, 4, 2);
-    var cirDer = this.crearCirculo (2, 0, 2);
-    var cirIzq = this.crearCirculo (-2, 0, 2);
+    var cirCentral = this.crearCirculo (0, 4, 2.5);
+    var cirDer = this.crearCirculo (2, 0, 2.5);
+    var cirIzq = this.crearCirculo (-2, 0, 2.5);
 
     this.add(cirCentral);
     this.add(cirDer);
@@ -55,7 +55,9 @@ class MyTrebol extends THREE.Object3D {
     shape.absarc (posX, posY, radio, 0, 2*Math.PI);
 
     var options = {
-      depth: 1, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.5, bevelThickness: 0.25,bevelSegments: 1
+      steps: 1,
+      depth: 1,
+      bevelEnabled: false
     };
 
     var geometry = new THREE.ExtrudeGeometry( shape, options );
@@ -67,19 +69,5 @@ class MyTrebol extends THREE.Object3D {
 
     var circle = new THREE.Mesh( geometry, Mat ) ;
     return circle;
-  }
-
-  update () {
-    //this.rotation.y += 0.01;
-    this.rotation.z -= 0.01;
-    // Con independencia de cómo se escriban las 3 siguientes líneas, el orden en el que se aplican las transformaciones es:
-    // Primero, el escalado
-    // Segundo, la rotación en Z
-    // Después, la rotación en Y
-    // Luego, la rotación en X
-    // Y por último la traslación
-    //this.position.set (this.guiControls.posX,this.guiControls.posY,this.guiControls.posZ);
-    //this.rotation.set (this.guiControls.rotX,this.guiControls.rotY,this.guiControls.rotZ);
-    //this.scale.set (this.guiControls.sizeX,this.guiControls.sizeY,this.guiControls.sizeZ);
   }
 }

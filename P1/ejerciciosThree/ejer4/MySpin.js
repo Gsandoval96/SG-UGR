@@ -8,20 +8,28 @@ class MySpin extends THREE.Object3D {
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
     this.createGUI(gui,titleGui);
 
-    this.diamante = new MyDiamante();
-    this.diamante.position.y = 10.0;
-    this.diamante.position.x = -10.0;
-    this.add (this.diamante);
+    //Nodo AB
+    this.diamanteAB = new MyDiamante();
+    this.corazonAB = new MyCorazon();
+    this.trebolAB = new MyTrebol();
 
-    this.corazon = new MyCorazon();
-    this.corazon.position.y = -10.0;
-    this.corazon.position.x = 10.0;
-    this.add (this.corazon);
+    //Nodo CD
+    this.diamanteCD = new THREE.Object3D();
+    this.corazonCD = new THREE.Object3D();
+    this.trebolCD = new THREE.Object3D();
 
-    this.trebol = new MyTrebol();
-    this.trebol.position.y = 8.0;
-    this.trebol.position.x = 8.0;
-    this.add (this.trebol);
+    this.diamanteCD.position.y = 13.0;
+    this.corazonCD.position.y = -13.0;
+    this.trebolCD.position.x = 13.0;
+
+    this.diamanteCD.add (this.diamanteAB);
+    this.corazonCD.add (this.corazonAB);
+    this.trebolCD.add (this.trebolAB);
+
+    //Nodo Final
+    this.add (this.diamanteCD);
+    this.add (this.corazonCD);
+    this.add (this.trebolCD);
 
     }
 
@@ -61,11 +69,15 @@ class MySpin extends THREE.Object3D {
   }
 
   update () {
+
     this.rotation.z += 0.01;
 
-    // Se actualiza el resto del modelo
-    this.diamante.update();
-    this.corazon.update();
-    this.trebol.update();
+    this.diamanteCD.rotation.z -= 0.01;
+    this.corazonCD.rotation.z -= 0.01;
+    this.trebolCD.rotation.z -= 0.01;
+
+    this.diamanteAB.rotation.y += 0.01;
+    this.corazonAB.rotation.y += 0.01;
+    this.trebolAB.rotation.y += 0.01;
   }
 }
