@@ -11,50 +11,66 @@ class MyPendulo extends THREE.Object3D {
     //Variables de animación
 
     this.escaladoPequeño = true;
+    this.escaladoGrande = true;
     this.rotPequeño = true;
+    this.rotGrande = true;
+    this.rotando = true;
 
     //Modelo jerárquico
 
-    this.pequeñoA = this.penduloPequeño();
-    this.pequeñoA.position.y = -5;
+    var materialAzul = new THREE.MeshBasicMaterial({color: 0x0000ff});
+    this.pequeño_size = new THREE.Vector3(2,10,1);
+    this.pequeñoA = this.caja(this.pequeño_size, materialAzul);
+    this.pequeñoA.position.set(0, -this.pequeño_size.y/2, this.pequeño_size.z/2);
 
-    this.pequeñoAB = new THREE.Object3D();
-    this.pequeñoAB.add(this.pequeñoA);
-    //this.pequeñoAB.position.y = 1;
-    this.pequeñoAB.position.z = 1.5;
+    this.pequeñoB = new THREE.Object3D();
+    this.pequeñoB.add(this.pequeñoA);
+    this.pequeñoB.position.y = this.pequeño_size.y/10;
 
-    this.tuercaPequeña = this.tuerca();
-    this.tuercaPequeña.position.set(0,-1,2);
+    var materialNegro = new THREE.MeshBasicMaterial({color: 0x000000});
+    this.tuercaPequeña_size = new THREE.Vector3(0.25, 10.0, 10.0);
+    this.tuercaPequeña = this.tuerca(this.tuercaPequeña_size, materialNegro);
+    this.tuercaPequeña.position.z = this.pequeño_size.z;
 
-    this.penduloPequeño = new THREE.Object3D();
-    this.penduloPequeño.add(this.pequeñoAB);
-    this.penduloPequeño.add(this.tuercaPequeña);
-    this.penduloPequeño.position.y = -this.guiControls.scaleYgrande*0.1;
 
-    // Como material se crea uno a partir de un color
     var materialRojo = new THREE.MeshBasicMaterial({color: 0x0ff0000});
-    var size = new THREE.Vector3(4,5,2);
-    this.cajaRojaA = this.caja(size,materialRojo);
-    this.cajaRojaA.position.y = -2.5;
+    this.cajaRoja_size = new THREE.Vector3(4,5,2);
+    this.cajaRojaA = this.caja(this.cajaRoja_size,materialRojo);
+    this.cajaRojaA.position.set(0,-this.cajaRoja_size.y/2,this.cajaRoja_size.z/2);
 
-    this.cajaRojaAB = new THREE.Object3D();
-    this.cajaRojaAB.add(this.cajaRojaA);
+    this.cajaRojaB = new THREE.Object3D();
+    this.cajaRojaB.add(this.cajaRojaA);
 
     var materialVerde = new THREE.MeshBasicMaterial({color: 0x00ff00});
-    var size = new THREE.Vector3(4,4,2);
-    this.cajaVerdeA = this.caja(size,materialVerde);
-    //this.cajaVerdeA.position.y = -2;
+    this.cajaVerde_size = new THREE.Vector3(4,4,2);
+    this.cajaVerdeInf = this.caja(this.cajaVerde_size,materialVerde);
+    this.cajaVerdeInf.position.z = this.cajaVerde_size.z/2;
 
-    this.cajaVerdeAB = new THREE.Object3D();
-    this.cajaVerdeAB.add(this.cajaVerdeA);
+    this.penduloPequeño = new THREE.Object3D();
+    this.penduloPequeño.add(this.pequeñoB);
+    this.penduloPequeño.add(this.tuercaPequeña);
+
+    this.cajaVerdeSup= this.caja(this.cajaVerde_size,materialVerde);
+    this.cajaVerdeSup.position.z = this.cajaVerde_size.z/2;
+
+    this.tuercaGrande_size = new THREE.Vector3(0.75, 10.0, 10.0);
+    this.tuercaGrande = this.tuerca(this.tuercaGrande_size, materialNegro);
+    this.tuercaGrande.position.z = this.cajaVerde_size.z;
 
     this.unionPendulo = new THREE.Object3D();
-    this.unionPendulo.add (this.cajaRojaAB);
-    this.unionPendulo.add (this.cajaVerdeAB);
-    this.unionPendulo.add (this.penduloPequeño);
+    this.unionPendulo.add(this.penduloPequeño);
+    this.unionPendulo.add(this.cajaRojaB);
+    this.unionPendulo.add(this.cajaVerdeInf);
+    this.unionPendulo.position.y = -this.cajaVerde_size.y/2;
+
+    this.pendulo = new THREE.Object3D();
+    this.pendulo.add(this.tuercaGrande);
+    this.pendulo.add(this.cajaVerdeSup);
+    this.pendulo.add(this.unionPendulo);
 
     //Nodo final
-    this.add(this.unionPendulo);
+    this.add(this.pendulo);
+
     }
 
     caja(size, material){
@@ -65,25 +81,11 @@ class MyPendulo extends THREE.Object3D {
       return caja;
     }
 
-    penduloPequeño(){
-      var penduloGeom = new THREE.BoxGeometry (2,10,1);
-
-      // Como material se crea uno a partir de un color
-      var penduloMat = new THREE.MeshBasicMaterial({color: 0x0000ff});
+    tuerca(size, material){
+      var tuercaGeom = new THREE.SphereGeometry(size.x, size.y, size.z);
 
       // Ya podemos construir el Mesh
-      var pendulo = new THREE.Mesh (penduloGeom, penduloMat);
-
-      return pendulo;
-    }
-
-    tuerca(){
-      var tuercaGeom = new THREE.SphereGeometry( 0.25, 10.0, 10.0);
-      // Como material se crea uno a partir de un color
-      var tuercaMat = new THREE.MeshPhongMaterial({color: 0xffff00});
-
-      // Ya podemos construir el Mesh
-      var tuerca = new THREE.Mesh (tuercaGeom, tuercaMat);
+      var tuerca = new THREE.Mesh (tuercaGeom, material);
 
       return tuerca;
     }
@@ -95,8 +97,10 @@ class MyPendulo extends THREE.Object3D {
       // Se definen mediante una   new function()
       // En este caso la intensidad de la luz y si se muestran o no los ejes
       this.guiControls = new function() {
-        this.animacionOnOff = true;
+        this.animacionOnOff = false;
+        this.porcentaje = 10;
         this.rotZpequeño = 0;
+        this.rotZgrande = 0;
         this.scaleYpequeño = 10;
         this.scaleYgrande = 5;
       }
@@ -105,10 +109,12 @@ class MyPendulo extends THREE.Object3D {
       var folderPenduloPequeño = gui.addFolder ("Péndulo Pequeño");
       // Y otro para mostrar u ocultar los ejes
       folderPenduloPequeño.add (this.guiControls, 'rotZpequeño', -Math.PI/4, Math.PI/4, Math.PI/180).name ('Rotación Z : ').listen();
-      folderPenduloPequeño.add (this.guiControls, 'scaleYpequeño', 10.0, 20.0, 0.1).name ('Tamaño Y : ').listen();
+      folderPenduloPequeño.add (this.guiControls, 'scaleYpequeño', 10, 20, 0.1).name ('Tamaño Y : ').listen();
+      folderPenduloPequeño.add (this.guiControls, 'porcentaje', 10, 90, 1).name ('% : ').listen();
 
       var folderPenduloGrande = gui.addFolder ("Péndulo Grande");
-      folderPenduloGrande.add (this.guiControls, 'scaleYgrande', 5.0, 10.0, 0.1).name ('Tamaño Y: ').listen();
+      folderPenduloGrande.add (this.guiControls, 'rotZgrande', -Math.PI/4, Math.PI/4, Math.PI/180).name ('Rotación Z : ').listen();
+      folderPenduloGrande.add (this.guiControls, 'scaleYgrande', 5,10, 0.1).name ('Tamaño Y: ').listen();
 
       var folder = gui.addFolder("Controles de la Animación");
       folder.add (this.guiControls, 'animacionOnOff').name ('Animación activa : ');
@@ -116,21 +122,23 @@ class MyPendulo extends THREE.Object3D {
   }
 
   update () {
+    this.pequeñoB.scale.set(1,this.guiControls.scaleYpequeño/this.pequeño_size.y,1);
     this.penduloPequeño.rotation.z = this.guiControls.rotZpequeño;
-    this.penduloPequeño.position.y = -this.guiControls.scaleYgrande*0.1;
-    this.cajaVerdeAB.position.y = -this.guiControls.scaleYgrande -2;
-    this.cajaRojaAB.scale.set(1,this.guiControls.scaleYgrande/5,1);
-    this.pequeñoAB.scale.set(1,this.guiControls.scaleYpequeño/10,1);
+    this.penduloPequeño.position.set(0,-this.guiControls.scaleYgrande*this.guiControls.porcentaje/100,this.cajaRoja_size.z);
+    this.cajaRojaB.scale.set(1,this.guiControls.scaleYgrande/this.cajaRoja_size.y,1);
+    this.cajaVerdeInf.position.y = -this.guiControls.scaleYgrande -this.cajaVerde_size.y/2;
+    this.pendulo.rotation.z = this.guiControls.rotZgrande;
 
-    /*if (this.guiControls.animacionOnOff){
 
-      if(this.guiControls.scaleYpequeño < 20 && this.escaladoPequeño){
+    if (this.guiControls.animacionOnOff){
+
+      if(this.guiControls.scaleYpequeño < this.pequeño_size.y*2 && this.escaladoPequeño){
         this.guiControls.scaleYpequeño += 0.1;
-        if(this.guiControls.scaleYpequeño >= 20) this.escaladoPequeño = false;
+        if(this.guiControls.scaleYpequeño >= this.pequeño_size.y*2) this.escaladoPequeño = false;
       }
-      else if(this.guiControls.scaleYpequeño > 10 && !this.escaladoPequeño){
+      else if(this.guiControls.scaleYpequeño > this.pequeño_size.y && !this.escaladoPequeño){
         this.guiControls.scaleYpequeño -= 0.1;
-        if(this.guiControls.scaleYpequeño <= 10) this.escaladoPequeño = true;
+        if(this.guiControls.scaleYpequeño <= this.pequeño_size.y) this.escaladoPequeño = true;
       }
 
       if(this.guiControls.rotZpequeño < Math.PI/4 && this.rotPequeño){
@@ -141,7 +149,33 @@ class MyPendulo extends THREE.Object3D {
         this.guiControls.rotZpequeño -= Math.PI/180;
         if(this.guiControls.rotZpequeño <= -Math.PI/4) this.rotPequeño = true;
       }
-    }*/
 
+      if(this.guiControls.porcentaje < 90 && this.rotando){
+        this.guiControls.porcentaje += 1;
+        if(this.guiControls.porcentaje >= 90) this.rotando = false;
+      }
+      else if(this.guiControls.porcentaje > 10 && !this.rotando){
+        this.guiControls.porcentaje -= 1;
+        if(this.guiControls.porcentaje <= 10) this.rotando = true;
+      }
+
+      if(this.guiControls.scaleYgrande < this.cajaRoja_size.y*2 && this.escaladoGrande){
+        this.guiControls.scaleYgrande += 0.1;
+        if(this.guiControls.scaleYgrande >= this.cajaRoja_size.y*2) this.escaladoGrande = false;
+      }
+      else if(this.guiControls.scaleYgrande > this.cajaRoja_size.y && !this.escaladoGrande){
+        this.guiControls.scaleYgrande -= 0.1;
+        if(this.guiControls.scaleYgrande <= this.cajaRoja_size.y) this.escaladoGrande = true;
+      }
+
+      if(this.guiControls.rotZgrande < Math.PI/4 && this.rotGrande){
+        this.guiControls.rotZgrande += Math.PI/180;
+        if(this.guiControls.rotZgrande >= Math.PI/4) this.rotGrande = false;
+      }
+      else if(this.guiControls.rotZgrande > -Math.PI/4 && !this.rotGrande){
+        this.guiControls.rotZgrande -= Math.PI/180;
+        if(this.guiControls.rotZgrande <= -Math.PI/4) this.rotGrande = true;
+      }
+    }
   }
 }
