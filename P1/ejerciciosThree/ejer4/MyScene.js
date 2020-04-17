@@ -34,7 +34,13 @@ class MyScene extends THREE.Scene {
     this.spin = new MySpin(this.gui, "Controles de la Animación");
     this.add (this.spin);
 
+    this.columnaDer = new MyColumna();
+    this.columnaDer.position.x = 25;
+    this.add (this.columnaDer);
 
+    this.columnaIzq= new MyColumna();
+    this.columnaIzq.position.x = -25;
+    this.add (this.columnaIzq);
 
   }
 
@@ -164,6 +170,8 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
 
     this.spin.update();
+    this.columnaDer.update();
+    this.columnaIzq.update();
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
