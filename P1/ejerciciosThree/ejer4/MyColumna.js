@@ -19,12 +19,12 @@ class MyColumna extends THREE.Object3D {
     ] );
 
     var options = {
-      steps: 50, curveSegments: 4, extrudePath: path
+      steps: 50, curveSegments: 20, extrudePath: path
     };
 
     var geometry = new THREE.ExtrudeGeometry( shape, options );
 
-    var material = new THREE.MeshToonMaterial( { color: 0x00ff00 } );
+    var material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
 
     this.columna = new THREE.Mesh( geometry, material ) ;
 
