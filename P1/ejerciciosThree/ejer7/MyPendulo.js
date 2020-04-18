@@ -32,7 +32,6 @@ class MyPendulo extends THREE.Object3D {
     this.tuercaPequeña = this.tuerca(this.tuercaPequeña_size, materialNegro);
     this.tuercaPequeña.position.z = this.pequeño_size.z;
 
-
     var materialRojo = new THREE.MeshBasicMaterial({color: 0x0ff0000});
     this.cajaRoja_size = new THREE.Vector3(4,5,2);
     this.cajaRojaA = this.caja(this.cajaRoja_size,materialRojo);
@@ -57,16 +56,16 @@ class MyPendulo extends THREE.Object3D {
     this.tuercaGrande = this.tuerca(this.tuercaGrande_size, materialNegro);
     this.tuercaGrande.position.z = this.cajaVerde_size.z;
 
-    this.unionPendulo = new THREE.Object3D();
-    this.unionPendulo.add(this.penduloPequeño);
-    this.unionPendulo.add(this.cajaRojaB);
-    this.unionPendulo.add(this.cajaVerdeInf);
-    this.unionPendulo.position.y = -this.cajaVerde_size.y/2;
+    this.unionPiezas = new THREE.Object3D();
+    this.unionPiezas.add(this.penduloPequeño);
+    this.unionPiezas.add(this.cajaRojaB);
+    this.unionPiezas.add(this.cajaVerdeInf);
+    this.unionPiezas.position.y = -this.cajaVerde_size.y/2;
 
     this.pendulo = new THREE.Object3D();
     this.pendulo.add(this.tuercaGrande);
     this.pendulo.add(this.cajaVerdeSup);
-    this.pendulo.add(this.unionPendulo);
+    this.pendulo.add(this.unionPiezas);
 
     //Nodo final
     this.add(this.pendulo);
