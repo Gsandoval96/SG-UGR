@@ -88,7 +88,7 @@ class MySistema extends THREE.Object3D {
     var tiempoActual = Date.now();
     var segundos = (tiempoActual - this.tiempoAnterior)/1000;
     this.sistema.rotation.y += segundos * this.velocidadRotacion;
-    this.tercerPlaneta.rotation.y += segundos * this.velocidadRotacion;
+    this.tercerPlaneta.rotation.y -= 2* segundos * this.velocidadRotacion;
     this.tiempoAnterior = tiempoActual;
   }
 }
