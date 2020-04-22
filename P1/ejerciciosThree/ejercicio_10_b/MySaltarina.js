@@ -29,10 +29,7 @@ class MySaltarina extends THREE.Object3D {
     this.pelotaB = new THREE.Object3D();
     this.pelotaB.add(this.pelotaA);
 
-    this.pelotaC = new THREE.Object3D();
-    this.pelotaC.add(this.pelotaB);
-
-    this.add(this.pelotaC);
+    this.add(this.pelotaB);
 
   }
 
