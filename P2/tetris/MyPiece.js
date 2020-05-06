@@ -1,17 +1,48 @@
 class MyPiece extends THREE.Object3D {
 
-  constructor() {
+  constructor(posX, posY) {
     super();
 
     this.type = this.randomType();
 
     this.material = new THREE.MeshStandardMaterial({color: 0xFF0000});
-    this.pos = new THREE.Vector3(1,1,0);
+    this.pos = new THREE.Vector3(posX, posY, 0);
 
     this.perifs = this.crearPerifs();
 
     this.piece = this.createPiece();
 
+    this.add(this.piece);
+  }
+
+  move(distX, distY){
+    this.translateX(distX);
+    this.translateY(distY);
+  }
+
+  rotateR(){
+
+    for(var i=0; i<3; i++){
+      var perif = this.perifs.getComponent(i);
+      var newPos = new THREE.Vector2(perif.y,-perif.x);
+      this.perifs.setComponent(i,newPos);
+    }
+
+    this.remove(this.piece);
+    this.piece = this.createPiece();
+    this.add(this.piece);
+  }
+
+  rotateL(){
+
+    for(var i=0; i<3; i++){
+      var perif = this.perifs.getComponent(i);
+      var newPos = new THREE.Vector2(-perif.y,perif.x);
+      this.perifs.setComponent(i,newPos);
+    }
+
+    this.remove(this.piece);
+    this.piece = this.createPiece();
     this.add(this.piece);
   }
 

@@ -30,10 +30,10 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.board = new MyBoard();
+    this.board = new MyBoard(10,15);
     this.add (this.board);
 
-    this.piece = new MyPiece();
+    this.piece = new MyPiece(3,3);
     this.add (this.piece);
 
   }
@@ -146,6 +146,23 @@ class MyScene extends THREE.Scene {
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
 
+  onKeyDown(event){
+    var key = event.which || event.keyCode;
+
+    console.log(key);
+
+    if (key == 81 ){this.piece.rotateR()} //Q
+    if (key == 69 ){this.piece.rotateL()} //E
+
+    if (key == 32 ){} //Espacio
+
+    if (key == 37 ){this.piece.move(-1,0)} //Flecha Izquierda
+    if (key == 38 ){this.piece.move(0,1)} //Flecha Arriba
+    if (key == 39 ){this.piece.move(1,0)} //Flecha Derecha
+    if (key == 40 ){this.piece.move(0,-1)} //Flecha Abajo
+
+  }
+
   update () {
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
 
@@ -176,6 +193,7 @@ $(function () {
 
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener ("resize", () => scene.onWindowResize());
+  window.addEventListener ("keydown", (event) => scene.onKeyDown(event));
 
   // Que no se nos olvide, la primera visualización.
   scene.update();
