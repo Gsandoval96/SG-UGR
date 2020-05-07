@@ -18,6 +18,20 @@ class MyBoard extends THREE.Object3D {
     return inBounds;
   }
 
+  static pieceInBounds(cubes){ //cube0 -> centerCube, cube1-3 -> perifs
+    var inBounds = MyBoard.inBounds(cubes[0]);
+
+    for(var i = 1; i<4 && inBounds; i++){
+      var perif = cubes[i];
+      var posPerif = new THREE.Vector2(cubes[0].x + perif.x,
+                                       cubes[0].y + perif.y);
+      inBounds = MyBoard.inBounds(posPerif);
+    }
+
+    return inBounds;
+
+  }
+
   constructor() {
     super();
 

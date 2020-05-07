@@ -149,8 +149,8 @@ class MyScene extends THREE.Scene {
 
     console.log(key);
 
-    if (key == 81 ){this.board.piece.rotateR()} //Q
-    if (key == 69 ){this.board.piece.rotateL()} //E
+    if (key == 81 ){this.board.piece.rotate('L')} //Q
+    if (key == 69 ){this.board.piece.rotate('R')} //E
 
     if (key == 32 ){} //Espacio
 

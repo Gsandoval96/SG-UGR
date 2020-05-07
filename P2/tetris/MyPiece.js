@@ -19,7 +19,11 @@ class MyPiece extends THREE.Object3D {
 
     var newPos = new THREE.Vector3(this.pos.x + distX, this.pos.y + distY, 0);
 
-    if(MyBoard.inBounds(newPos)){
+    var cubes = [ newPos, this.perifs.x, this.perifs.y, this.perifs.z ];
+
+    var inBounds = MyBoard.pieceInBounds(cubes);
+
+    if(inBounds){
 
       this.pos = newPos;
 
@@ -29,30 +33,36 @@ class MyPiece extends THREE.Object3D {
     }
   }
 
-  rotateR(){
+  rotate(dir){
+
+    var rot;
+
+    if(dir == 'R')
+      rot = new THREE.Vector2(1,-1);
+    else
+      rot = new THREE.Vector2(-1,1);
+
+    var cubes = [ this.pos ];
 
     for(var i=0; i<3; i++){
       var perif = this.perifs.getComponent(i);
-      var newPos = new THREE.Vector2(perif.y,-perif.x);
-      this.perifs.setComponent(i,newPos);
+      var newPerif = new THREE.Vector2(perif.y*rot.x,perif.x*rot.y);
+      cubes.push(newPerif);
+    }
+    
+    var inBounds = MyBoard.pieceInBounds(cubes);
+
+    if(inBounds){
+
+      for(var i=0; i<3; i++){
+        this.perifs.setComponent(i,cubes[i+1]);
+      }
+
+      this.remove(this.piece);
+      this.piece = this.createPiece();
+      this.add(this.piece);
     }
 
-    this.remove(this.piece);
-    this.piece = this.createPiece();
-    this.add(this.piece);
-  }
-
-  rotateL(){
-
-    for(var i=0; i<3; i++){
-      var perif = this.perifs.getComponent(i);
-      var newPos = new THREE.Vector2(-perif.y,perif.x);
-      this.perifs.setComponent(i,newPos);
-    }
-
-    this.remove(this.piece);
-    this.piece = this.createPiece();
-    this.add(this.piece);
   }
 
   randomType(){
