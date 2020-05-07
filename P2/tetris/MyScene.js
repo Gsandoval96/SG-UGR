@@ -30,11 +30,9 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.board = new MyBoard(10,15);
-    this.add (this.board);
 
-    this.piece = new MyPiece(3,3);
-    this.add (this.piece);
+    this.board = new MyBoard();
+    this.add (this.board);
 
   }
 
@@ -151,15 +149,15 @@ class MyScene extends THREE.Scene {
 
     console.log(key);
 
-    if (key == 81 ){this.piece.rotateR()} //Q
-    if (key == 69 ){this.piece.rotateL()} //E
+    if (key == 81 ){this.board.piece.rotateR()} //Q
+    if (key == 69 ){this.board.piece.rotateL()} //E
 
     if (key == 32 ){} //Espacio
 
-    if (key == 37 ){this.piece.move(-1,0)} //Flecha Izquierda
-    if (key == 38 ){this.piece.move(0,1)} //Flecha Arriba
-    if (key == 39 ){this.piece.move(1,0)} //Flecha Derecha
-    if (key == 40 ){this.piece.move(0,-1)} //Flecha Abajo
+    if (key == 37 ){this.board.piece.move(-1,0)} //Flecha Izquierda
+    if (key == 38 ){this.board.piece.move(0,1)} //Flecha Arriba
+    if (key == 39 ){this.board.piece.move(1,0)} //Flecha Derecha
+    if (key == 40 ){this.board.piece.move(0,-1)} //Flecha Abajo
 
   }
 

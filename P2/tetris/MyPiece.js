@@ -16,8 +16,17 @@ class MyPiece extends THREE.Object3D {
   }
 
   move(distX, distY){
-    this.translateX(distX);
-    this.translateY(distY);
+
+    var newPos = new THREE.Vector3(this.pos.x + distX, this.pos.y + distY, 0);
+
+    if(MyBoard.inBounds(newPos)){
+
+      this.pos = newPos;
+
+      this.remove(this.piece);
+      this.piece = this.createPiece();
+      this.add(this.piece);
+    }
   }
 
   rotateR(){
