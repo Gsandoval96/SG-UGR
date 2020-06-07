@@ -1,5 +1,6 @@
 class MyPiece extends THREE.Object3D {
 
+
   constructor(posX, posY) {
     super();
 
@@ -15,17 +16,27 @@ class MyPiece extends THREE.Object3D {
     this.add(this.piece);
   }
 
+  copy(p){
+      this.type = p.type;
+      this.material = p.material;
+      this.pos = p.pos;
+      this.perifs = p.perifs;
+      this.piece = p.piece;
+  }
+
   move(distX, distY){
 
     var newPos = new THREE.Vector3(this.pos.x + distX, this.pos.y + distY, 0);
 
-    var cubes = [ newPos, this.perifs.x, this.perifs.y, this.perifs.z ];
+    var newPiece = new MyPiece(0,0);
+    newPiece.copy(this);
+    newPiece.pos = newPos;
 
-    var inBounds = MyBoard.pieceInBounds(cubes);
+    var inBounds = MyBoard.pieceInBounds(newPiece);
 
     if(inBounds){
 
-      this.pos = newPos;
+      this.pos = newPiece.pos;
 
       this.remove(this.piece);
       this.piece = this.createPiece();
@@ -42,27 +53,26 @@ class MyPiece extends THREE.Object3D {
     else
       rot = new THREE.Vector2(-1,1);
 
-    var cubes = [ this.pos ];
+    var newPerifs = new THREE.Vector3(THREE.Vector2(0,0), THREE.Vector2(0,0), THREE.Vector2(0,0));
 
     for(var i=0; i<3; i++){
       var perif = this.perifs.getComponent(i);
       var newPerif = new THREE.Vector2(perif.y*rot.x,perif.x*rot.y);
-      cubes.push(newPerif);
+      newPerifs.setComponent(i,newPerif);
     }
-    
-    var inBounds = MyBoard.pieceInBounds(cubes);
 
-    if(inBounds){
+    var newPiece = new MyPiece(0,0);
+    newPiece.copy(this);
+    newPiece.perifs = newPerifs;
 
-      for(var i=0; i<3; i++){
-        this.perifs.setComponent(i,cubes[i+1]);
-      }
+    var inBounds = MyBoard.pieceInBounds(newPiece);
+
+      this.perifs = newPiece.perifs;
 
       this.remove(this.piece);
       this.piece = this.createPiece();
       this.add(this.piece);
     }
-
   }
 
   randomType(){

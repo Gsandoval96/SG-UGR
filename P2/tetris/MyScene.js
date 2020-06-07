@@ -147,12 +147,12 @@ class MyScene extends THREE.Scene {
   onKeyDown(event){
     var key = event.which || event.keyCode;
 
-    console.log(key);
+    //console.log(key);
 
     if (key == 81 ){this.board.piece.rotate('L')} //Q
     if (key == 69 ){this.board.piece.rotate('R')} //E
 
-    if (key == 32 ){} //Espacio
+    if (key == 32 ){this.board.pinUp()} //Espacio
 
     if (key == 37 ){this.board.piece.move(-1,0)} //Flecha Izquierda
     if (key == 38 ){this.board.piece.move(0,1)} //Flecha Arriba
@@ -166,7 +166,7 @@ class MyScene extends THREE.Scene {
 
     // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
     // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
-    requestAnimationFrame(() => this.update())
+    requestAnimationFrame(() => this.update());
 
     // Se actualizan los elementos de la escena para cada frame
     // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
@@ -192,6 +192,11 @@ $(function () {
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener ("resize", () => scene.onWindowResize());
   window.addEventListener ("keydown", (event) => scene.onKeyDown(event));
+
+  var audio = new Audio('../audio/tetris.mp3',null);
+  audio.loop = true;
+  audio.volume = 0.1;
+  //audio.play();
 
   // Que no se nos olvide, la primera visualización.
   scene.update();
