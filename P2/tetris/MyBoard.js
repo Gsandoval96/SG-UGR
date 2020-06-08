@@ -5,6 +5,8 @@ class MyBoard extends THREE.Object3D {
   static WIDTH = 11;
   static HEIGHT = 15;
 
+  static insideMat = new THREE.MeshStandardMaterial({color: 0x000000, opacity:0.15,transparent:true});
+
   inBounds(coord){
 
     var inBounds = true;
@@ -31,11 +33,10 @@ class MyBoard extends THREE.Object3D {
 
   }
 
-  isColliding(piece){
+  bottomCollider(piece){
     var collide = false;
 
     var coord = new THREE.Vector2(piece.pos.x, piece.pos.y);
-
     if(coord.y < 0) collide = true;
 
     for(var i = 0; i<3 && !collide; i++){
@@ -48,10 +49,34 @@ class MyBoard extends THREE.Object3D {
     return collide;
   }
 
+  collide(piece){
+    var collide = false;
+
+    var posX = piece.pos.x;
+    var posY = piece.pos.y;
+
+    var pos = posX * (MyBoard.HEIGHT) + posY;
+    var material = this.children[pos].box.material;
+
+    if(material != MyBoard.insideMat)
+      collide = true;
+
+    for(var i = 0; i < 3 && !collide; i++){
+      var perif = piece.perifs.getComponent(i);
+      var posPerif = new THREE.Vector2(posX + perif.x, posY + perif.y);
+
+      pos = posPerif.x * (MyBoard.HEIGHT) + posPerif.y;
+      material = this.children[pos].box.material;
+
+      if(material != MyBoard.insideMat)
+        collide = true;
+    }
+    return collide;
+  }
+
   constructor() {
     super();
 
-    var insideMat = new THREE.MeshStandardMaterial({color: 0x000000, opacity:0.15,transparent:true});
     var edgeMat = new THREE.MeshStandardMaterial({color: 0x111111});
 
     /*for(var i = 0; i < MyBoard.WIDTH+2; i++){
@@ -75,7 +100,7 @@ class MyBoard extends THREE.Object3D {
         var position = new THREE.Vector3(i,j,0);
         var cube;
 
-        cube = new MyCube(position, insideMat);
+        cube = new MyCube(position, MyBoard.insideMat);
 
         this.add(cube);
       }
@@ -93,28 +118,42 @@ class MyBoard extends THREE.Object3D {
       .to(destino, 2000) //2 segundos
       .onUpdate (function(){
         if(origen.p == 1)
-          that.movePiece(0,-1);
+          that.dropPiece();
       })
       .repeat(Infinity)
       .start();
   }
 
-  movePiece(distX, distY){
+  movePiece(distX){
 
-    var newPos = new THREE.Vector3(this.piece.pos.x + distX, this.piece.pos.y + distY, 0);
+    var newPos = new THREE.Vector3(this.piece.pos.x + distX, this.piece.pos.y, 0);
 
     var newPiece = new MyPiece(0,0);
     newPiece.copy(this.piece);
     newPiece.pos = newPos;
 
     var inBounds = this.pieceInBounds(newPiece);
-    var collide = this.isColliding(newPiece);
 
-    if(collide){
-       this.pinUp(this.piece);
+    if(inBounds){
+      var collision = this.collide(newPiece);
+      if(!collision)
+        this.piece.move(newPiece.pos);
     }
+  }
 
-    if(inBounds && !collide){
+  dropPiece(){
+    var newPos = new THREE.Vector3(this.piece.pos.x, this.piece.pos.y-1, 0);
+
+    var newPiece = new MyPiece(0,0);
+    newPiece.copy(this.piece);
+    newPiece.pos = newPos;
+
+    var collision = this.bottomCollider(newPiece) || this.collide(newPiece);
+
+    if(collision){
+      this.pinUp(this.piece);
+    }
+    else{
       this.piece.move(newPiece.pos);
     }
   }
@@ -143,13 +182,13 @@ class MyBoard extends THREE.Object3D {
     var inBounds = this.pieceInBounds(newPiece);
 
     if(inBounds){
-      this.piece.rotate(newPerifs);
+      var collision = this.collide(newPiece);
+      if(!collision)
+        this.piece.rotate(newPerifs);
     }
   }
 
   pinUp(piece){
-    console.log("PINUP");
-    console.log(piece);
     var posX = piece.pos.x;
     var posY = piece.pos.y;
     var material = piece.material;

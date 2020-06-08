@@ -171,9 +171,9 @@ class MyScene extends THREE.Scene {
     if (key == 32 ){this.board.pinUp()} //Espacio
 
     if (key == 37 ){this.board.movePiece(-1,0)} //Flecha Izquierda
-    if (key == 38 ){this.board.movePiece(0,1)} //Flecha Arriba
+    //if (key == 38 ){this.board.movePiece(0,1)} //Flecha Arriba
     if (key == 39 ){this.board.movePiece(1,0)} //Flecha Derecha
-    if (key == 40 ){this.board.movePiece(0,-1)} //Flecha Abajo
+    if (key == 40 ){this.board.dropPiece()} //Flecha Abajo
 
   }
 
