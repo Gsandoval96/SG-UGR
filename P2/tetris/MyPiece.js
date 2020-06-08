@@ -1,15 +1,14 @@
 class MyPiece extends THREE.Object3D {
 
-
   constructor(posX, posY) {
     super();
 
     this.type = this.randomType();
 
-    this.material = this.crearMaterial();
+    this.material = this.createMaterial();
     this.pos = new THREE.Vector3(posX, posY, 0);
 
-    this.perifs = this.crearPerifs();
+    this.perifs = this.createPerifs();
 
     this.piece = this.createPiece();
 
@@ -31,7 +30,7 @@ class MyPiece extends THREE.Object3D {
     return types[random];
   }
 
-  crearPerifs(){
+  createPerifs(){
     var perif;
 
     switch (this.type){
@@ -81,7 +80,7 @@ class MyPiece extends THREE.Object3D {
     return perif;
   }
 
-  crearMaterial(){
+  createMaterial(){
     var material;
 
     switch (this.type){

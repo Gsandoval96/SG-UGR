@@ -7,6 +7,42 @@ class MyBoard extends THREE.Object3D {
 
   static insideMat = new THREE.MeshStandardMaterial({color: 0xFFFFFF, opacity:0.25,transparent:true});
 
+  constructor() {
+    super();
+
+    for(var i = 0; i < MyBoard.HEIGHT; i++){
+      for(var j = 0; j < MyBoard.WIDTH; j++){
+
+        var position = new THREE.Vector3(j,i,0);
+        var cube;
+
+        var size = new THREE.Vector3(1,1,1);
+        cube = new MyCube(position, MyBoard.insideMat, size);
+
+        this.add(cube);
+      }
+    }
+
+    this.piece = new MyPiece(5,12);
+    this.add(this.piece);
+
+    
+
+    //Animaciones con TWEEN
+    var origen = { p : 0 } ;
+    var destino = { p : 1 } ;
+    var that = this;
+
+    var movimiento = new TWEEN.Tween(origen)
+      .to(destino, 2000) //2 segundos
+      .onUpdate (function(){
+        if(origen.p == 1)
+          that.dropPiece();
+      })
+      .repeat(Infinity)
+      .start();
+  }
+
   inBounds(coord){
 
     var inBounds = true;
@@ -72,57 +108,6 @@ class MyBoard extends THREE.Object3D {
         collide = true;
     }
     return collide;
-  }
-
-  constructor() {
-    super();
-
-    var edgeMat = new THREE.MeshStandardMaterial({color: 0x111111});
-
-    /*for(var i = 0; i < MyBoard.WIDTH+2; i++){
-      for(var j = 0; j < MyBoard.HEIGHT+1; j++){
-
-        var position = new THREE.Vector3(i,j,0);
-        var cube;
-
-        if(i == 0 || i == MyBoard.WIDTH+1 || j == 0)
-          cube = new MyCube(position, edgeMat);
-        else
-          cube = new MyCube(position, insideMat);
-
-        this.add(cube);
-      }
-    }*/
-
-    for(var i = 0; i < MyBoard.HEIGHT; i++){
-      for(var j = 0; j < MyBoard.WIDTH; j++){
-
-        var position = new THREE.Vector3(j,i,0);
-        var cube;
-
-        var size = new THREE.Vector3(1,1,1);
-        cube = new MyCube(position, MyBoard.insideMat, size);
-
-        this.add(cube);
-      }
-    }
-
-    this.piece = new MyPiece(5,12);
-    this.add(this.piece);
-
-    //Animaciones con TWEEN
-    var origen = { p : 0 } ;
-    var destino = { p : 1 } ;
-    var that = this;
-
-    var movimiento = new TWEEN.Tween(origen)
-      .to(destino, 2000) //2 segundos
-      .onUpdate (function(){
-        if(origen.p == 1)
-          that.dropPiece();
-      })
-      .repeat(Infinity)
-      .start();
   }
 
   movePiece(distX){

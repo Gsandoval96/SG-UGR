@@ -11,34 +11,19 @@ class MyScene extends THREE.Scene {
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
 
-    // Se añade a la gui los controles para manipular los elementos de esta clase
-    this.gui = this.createGUI ();
-
-    // Construimos los distinos elementos que tendremos en la escena
-
-    // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
-    // Tras crear cada elemento se añadirá a la escena con   this.add(variable)
+    // Creamos las luces
     this.createLights ();
 
-    // Tendremos una cámara con un control de movimiento con el ratón
+    // Creamos la cámara
     this.createCamera ();
 
-    // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
-    this.axis = new THREE.AxesHelper (10);
-    this.add (this.axis);
-
-    // Por último creamos el modelo.
-    // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
-    // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-
+    // Creamos el tablero y lo añadimos a la escena
     this.board = new MyBoard();
     this.add (this.board);
 
+    // Creamos y gestionamos el audio que sonará de fondo
     this.listener = new THREE.AudioListener();
-    this.camera.add( this.listener );
-
-    var listener = new THREE.AudioListener();
-    var sound = new THREE.Audio( listener );
+    var sound = new THREE.Audio( this.listener );
     var file = '../audio/Bad_Cat_Master.mp3';
 
     var audioLoader = new THREE.AudioLoader();
@@ -46,7 +31,7 @@ class MyScene extends THREE.Scene {
       sound.setBuffer( buffer );
       sound.setLoop( true );
       sound.setVolume( 0.1 );
-      //sound.play();
+      sound.play();
     });
 
   }
@@ -58,10 +43,16 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     // También se indica dónde se coloca
-    this.camera.position.set (5, 5, 30);
+    this.camera.position.set (5, 7.5, 30);
     // Y hacia dónde mira
-    var look = new THREE.Vector3 (5,5,0);
+    var look = new THREE.Vector3 (5, 7.5, 0);
     this.camera.lookAt(look);
+    //------------------------------
+    // ORIENTACIÓN DE LA CÁMARA
+    //------------------------------
+    // var up = new THREE.Vector3(0,-1,0);
+    // this.camera.up = up;
+    // -------------------------------
 
     this.add (this.camera);
 
@@ -73,32 +64,6 @@ class MyScene extends THREE.Scene {
     this.cameraControl.panSpeed = 0.5;
     // Debe orbitar con respecto al punto de mira de la cámara
     this.cameraControl.target = look;
-  }
-
-
-  createGUI () {
-    // Se crea la interfaz gráfica de usuario
-    var gui = new dat.GUI();
-
-    // La escena le va a añadir sus propios controles.
-    // Se definen mediante una   new function()
-    // En este caso la intensidad de la luz y si se muestran o no los ejes
-    this.guiControls = new function() {
-      // En el contexto de una función   this   alude a la función
-      this.lightIntensity = 0.5;
-      this.axisOnOff = true;
-    }
-
-    // Se crea una sección para los controles de esta clase
-    var folder = gui.addFolder ('Luz y Ejes');
-
-    // Se le añade un control para la intensidad de la luz
-    folder.add (this.guiControls, 'lightIntensity', 0, 1, 0.1).name('Intensidad de la Luz : ');
-
-    // Y otro para mostrar u ocultar los ejes
-    folder.add (this.guiControls, 'axisOnOff').name ('Mostrar ejes : ');
-
-    return gui;
   }
 
   createLights () {
@@ -114,7 +79,8 @@ class MyScene extends THREE.Scene {
     // La luz focal, además tiene una posición, y un punto de mira
     // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
-    this.spotLight = new THREE.SpotLight( 0xffffff, this.guiControls.lightIntensity );
+    var lightIntensity = 0.5;
+    this.spotLight = new THREE.SpotLight( 0xffffff, lightIntensity );
     this.spotLight.position.set( 0, 30, 100 );
     this.add (this.spotLight);
   }
@@ -170,9 +136,9 @@ class MyScene extends THREE.Scene {
 
     if (key == 32 ){this.board.hardDrop()} //Espacio
 
-    if (key == 37 ){this.board.movePiece(-1,0)} //Flecha Izquierda
+    if (key == 37 ){this.board.movePiece(-1)} //Flecha Izquierda
     //if (key == 38 ){this.board.movePiece(0,1)} //Flecha Arriba
-    if (key == 39 ){this.board.movePiece(1,0)} //Flecha Derecha
+    if (key == 39 ){this.board.movePiece(1)} //Flecha Derecha
     if (key == 40 ){this.board.dropPiece()} //Flecha Abajo
 
   }
@@ -183,13 +149,6 @@ class MyScene extends THREE.Scene {
     // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
     // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
     requestAnimationFrame(() => this.update());
-
-    // Se actualizan los elementos de la escena para cada frame
-    // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
-    this.spotLight.intensity = this.guiControls.lightIntensity;
-
-    // Se muestran o no los ejes según lo que idique la GUI
-    this.axis.visible = this.guiControls.axisOnOff;
 
     // Se actualiza la posición de la cámara según su controlador
     this.cameraControl.update();
