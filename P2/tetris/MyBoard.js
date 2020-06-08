@@ -5,7 +5,7 @@ class MyBoard extends THREE.Object3D {
   static WIDTH = 11;
   static HEIGHT = 15;
 
-  static insideMat = new THREE.MeshStandardMaterial({color: 0x000000, opacity:0.15,transparent:true});
+  static insideMat = new THREE.MeshStandardMaterial({color: 0xFFFFFF, opacity:0.25,transparent:true});
 
   inBounds(coord){
 
@@ -226,7 +226,6 @@ class MyBoard extends THREE.Object3D {
   }
 
   respawn(){
-    console.log("RESPAWN");
     this.remove(this.piece);
     this.piece = new MyPiece(5,12);
     this.add(this.piece);

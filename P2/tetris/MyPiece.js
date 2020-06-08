@@ -6,7 +6,7 @@ class MyPiece extends THREE.Object3D {
 
     this.type = this.randomType();
 
-    this.material = new THREE.MeshStandardMaterial({color: 0xFF0000});
+    this.material = this.crearMaterial();
     this.pos = new THREE.Vector3(posX, posY, 0);
 
     this.perifs = this.crearPerifs();
@@ -81,12 +81,76 @@ class MyPiece extends THREE.Object3D {
     return perif;
   }
 
+  crearMaterial(){
+    var material;
+
+    switch (this.type){
+      case 'L':
+        material = new THREE.MeshStandardMaterial({color: 0xFF8000});
+      break;
+
+      case 'J':
+        material = new THREE.MeshStandardMaterial({color: 0x0000FF});
+      break;
+
+      case 'S':
+        material = new THREE.MeshStandardMaterial({color: 0x00FF00});
+      break;
+
+      case 'Z':
+        material = new THREE.MeshStandardMaterial({color: 0xFF0000});
+      break;
+
+      case 'T':
+        material = new THREE.MeshStandardMaterial({color: 0xFF00FF});
+      break;
+
+      case 'I':
+        material = new THREE.MeshStandardMaterial({color: 0x00FFFF});
+      break;
+
+      case 'O':
+        material = new THREE.MeshStandardMaterial({color: 0xFFFF00});
+      break;
+    }
+
+    /*switch (this.type){
+      case 'L':
+        material = new THREE.MeshLambertMaterial({color: 0xFF8000, emissive: 0xFF8000});
+      break;
+
+      case 'J':
+        material = new THREE.MeshLambertMaterial({color: 0x0000FF, emissive: 0x0000FF});
+      break;
+
+      case 'S':
+        material = new THREE.MeshLambertMaterial({color: 0x00FF00, emissive: 0x00FF00});
+      break;
+
+      case 'Z':
+        material = new THREE.MeshLambertMaterial({color: 0xFF0000, emissive: 0xFF0000});
+      break;
+
+      case 'T':
+        material = new THREE.MeshLambertMaterial({color: 0xFF00FF, emissive: 0xFF00FF});
+      break;
+
+      case 'I':
+        material = new THREE.MeshLambertMaterial({color: 0x00FFFF, emissive: 0x00FFFF});
+      break;
+
+      case 'O':
+        material = new THREE.MeshLambertMaterial({color: 0xFFFF00, emissive: 0xFFFF00});
+      break;
+    }*/
+
+    return material;
+  }
+
   createPiece(){
     var piece = new THREE.Object3D();
 
-    var mat = new THREE.MeshStandardMaterial({color: 0x00FF00});
-
-    var cube = new MyCube(this.pos, mat);
+    var cube = new MyCube(this.pos, this.material);
     piece.add(cube);
 
     for(var i = 0; i < 3; i++){
