@@ -161,32 +161,33 @@ class MyBoard extends THREE.Object3D {
   }
 
   rotatePiece(dir){
+    if(this.piece.type != 'O'){
+      var rot;
 
-    var rot;
+      if(dir == 'R')
+        rot = new THREE.Vector2(1,-1);
+      else
+        rot = new THREE.Vector2(-1,1);
 
-    if(dir == 'R')
-      rot = new THREE.Vector2(1,-1);
-    else
-      rot = new THREE.Vector2(-1,1);
+      var newPerifs = new THREE.Vector3(THREE.Vector2(0,0), THREE.Vector2(0,0), THREE.Vector2(0,0));
 
-    var newPerifs = new THREE.Vector3(THREE.Vector2(0,0), THREE.Vector2(0,0), THREE.Vector2(0,0));
+      for(var i=0; i<3; i++){
+        var perif = this.piece.perifs.getComponent(i);
+        var newPerif = new THREE.Vector2(perif.y*rot.x,perif.x*rot.y);
+        newPerifs.setComponent(i,newPerif);
+      }
 
-    for(var i=0; i<3; i++){
-      var perif = this.piece.perifs.getComponent(i);
-      var newPerif = new THREE.Vector2(perif.y*rot.x,perif.x*rot.y);
-      newPerifs.setComponent(i,newPerif);
-    }
+      var newPiece = new MyPiece(0,0);
+      newPiece.copy(this.piece);
+      newPiece.perifs = newPerifs;
 
-    var newPiece = new MyPiece(0,0);
-    newPiece.copy(this.piece);
-    newPiece.perifs = newPerifs;
+      var inBounds = this.pieceInBounds(newPiece);
 
-    var inBounds = this.pieceInBounds(newPiece);
-
-    if(inBounds){
-      var collision = this.collide(newPiece);
-      if(!collision)
-        this.piece.rotate(newPerifs);
+      if(inBounds){
+        var collision = this.collide(newPiece);
+        if(!collision)
+          this.piece.rotate(newPerifs);
+      }
     }
   }
 
