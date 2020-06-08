@@ -86,15 +86,17 @@ class MyBoard extends THREE.Object3D {
       this.children[pos].box.material = this.piece.material;
     }
 
-    respawn();
+    this.respawn();
   }
 
   respawn(){
-    
+    this.remove(this.piece);
+    this.piece = new MyPiece(5,12);
+    this.add(this.piece);
   }
 
   isColliding(){
-
+  return null;
   }
 
   update () {

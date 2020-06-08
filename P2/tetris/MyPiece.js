@@ -67,6 +67,7 @@ class MyPiece extends THREE.Object3D {
 
     var inBounds = MyBoard.pieceInBounds(newPiece);
 
+    if(inBounds){
       this.perifs = newPiece.perifs;
 
       this.remove(this.piece);
