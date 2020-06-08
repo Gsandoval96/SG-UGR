@@ -1,15 +1,15 @@
 
 
 class MyCube extends THREE.Object3D {
-  constructor(pos, material){
+  constructor(pos, material, size){
     super();
 
-    var SIZE = 1;
+    //var SIZE = 1;
     var edgeSize = 0.05;
 
     // Creamos la geometría y la colocamos en el 0,0,0
-    var boxGeom = new THREE.BoxGeometry (SIZE-edgeSize,SIZE-edgeSize,SIZE-edgeSize);
-    boxGeom.translate(SIZE/2, SIZE/2, SIZE/2);
+    var boxGeom = new THREE.BoxGeometry (size.x-edgeSize,size.y-edgeSize,size.z-edgeSize);
+    boxGeom.translate(size.x/2, size.y/2, size.z/2);
 
     // Ya podemos construir el Mesh
     this.box = new THREE.Mesh (boxGeom, material);

@@ -150,7 +150,8 @@ class MyPiece extends THREE.Object3D {
   createPiece(){
     var piece = new THREE.Object3D();
 
-    var cube = new MyCube(this.pos, this.material);
+    var size = new THREE.Vector3(1,1,2);
+    var cube = new MyCube(this.pos, this.material, size);
     piece.add(cube);
 
     for(var i = 0; i < 3; i++){
@@ -158,7 +159,8 @@ class MyPiece extends THREE.Object3D {
       var posPerif = new THREE.Vector3(this.pos.x + perif.x,
                                        this.pos.y + perif.y,
                                        this.pos.z);
-      cube = new MyCube(posPerif, this.material);
+      var size = new THREE.Vector3(1,1,2);
+      cube = new MyCube(posPerif, this.material,size);
       piece.add(cube);
     }
 

@@ -100,7 +100,8 @@ class MyBoard extends THREE.Object3D {
         var position = new THREE.Vector3(j,i,0);
         var cube;
 
-        cube = new MyCube(position, MyBoard.insideMat);
+        var size = new THREE.Vector3(1,1,1);
+        cube = new MyCube(position, MyBoard.insideMat, size);
 
         this.add(cube);
       }
@@ -207,10 +208,16 @@ class MyBoard extends THREE.Object3D {
     this.respawn();
   }
 
+  hardDrop(){
+    
+  }
+
   checkRow(){
     var fullRow;
     var pos;
     var material;
+
+    var rows = [];
 
     for(var i = 0; i < MyBoard.HEIGHT; i++){
       fullRow = true;
@@ -221,7 +228,38 @@ class MyBoard extends THREE.Object3D {
         if(material == MyBoard.insideMat)
           fullRow = false;
       }
-      if(fullRow) console.log("FILA-LLENA");
+      if(fullRow){
+        console.log("FILA-LLENA");
+        rows.unshift(i);
+      }
+    }
+    if(rows.length != 0) this.clearRows(rows);
+  }
+
+  clearRows(rows){
+    for(var i=0;i<rows.length;i++){
+      this.emptyRow(rows[i]);
+      this.dropRows(rows[i]);
+    }
+  }
+
+  dropRows(n){
+    var pos;
+
+    for(var i=n;i<MyBoard.HEIGHT-1;i++){
+      for(var j = 0; j < MyBoard.WIDTH; j++){
+        pos = i * (MyBoard.WIDTH) + j;
+        this.children[pos].box.material = this.children[pos+MyBoard.WIDTH].box.material;
+      }
+    }
+  }
+
+  emptyRow(n){
+    var pos;
+
+    for(var i=0; i < MyBoard.WIDTH; i++){
+      pos = n * (MyBoard.WIDTH) + i;
+      this.children[pos].box.material = MyBoard.insideMat;
     }
   }
 

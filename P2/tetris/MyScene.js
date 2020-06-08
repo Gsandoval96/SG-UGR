@@ -168,7 +168,7 @@ class MyScene extends THREE.Scene {
     if (key == 81 ){this.board.rotatePiece('L')} //Q
     if (key == 69 ){this.board.rotatePiece('R')} //E
 
-    if (key == 32 ){this.board.pinUp()} //Espacio
+    if (key == 32 ){this.board.hardDrop()} //Espacio
 
     if (key == 37 ){this.board.movePiece(-1,0)} //Flecha Izquierda
     //if (key == 38 ){this.board.movePiece(0,1)} //Flecha Arriba
