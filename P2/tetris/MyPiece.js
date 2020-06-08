@@ -24,58 +24,6 @@ class MyPiece extends THREE.Object3D {
       this.piece = p.piece;
   }
 
-  move(distX, distY){
-
-    var newPos = new THREE.Vector3(this.pos.x + distX, this.pos.y + distY, 0);
-
-    var newPiece = new MyPiece(0,0);
-    newPiece.copy(this);
-    newPiece.pos = newPos;
-
-    var inBounds = MyBoard.pieceInBounds(newPiece);
-
-    if(inBounds){
-
-      this.pos = newPiece.pos;
-
-      this.remove(this.piece);
-      this.piece = this.createPiece();
-      this.add(this.piece);
-    }
-  }
-
-  rotate(dir){
-
-    var rot;
-
-    if(dir == 'R')
-      rot = new THREE.Vector2(1,-1);
-    else
-      rot = new THREE.Vector2(-1,1);
-
-    var newPerifs = new THREE.Vector3(THREE.Vector2(0,0), THREE.Vector2(0,0), THREE.Vector2(0,0));
-
-    for(var i=0; i<3; i++){
-      var perif = this.perifs.getComponent(i);
-      var newPerif = new THREE.Vector2(perif.y*rot.x,perif.x*rot.y);
-      newPerifs.setComponent(i,newPerif);
-    }
-
-    var newPiece = new MyPiece(0,0);
-    newPiece.copy(this);
-    newPiece.perifs = newPerifs;
-
-    var inBounds = MyBoard.pieceInBounds(newPiece);
-
-    if(inBounds){
-      this.perifs = newPiece.perifs;
-
-      this.remove(this.piece);
-      this.piece = this.createPiece();
-      this.add(this.piece);
-    }
-  }
-
   randomType(){
     var types = ['L','J','S','Z','T','I','O'];
     var random = Math.round(Math.random()*6);
@@ -153,8 +101,20 @@ class MyPiece extends THREE.Object3D {
     return piece;
   }
 
-  update () {
+  move(newPos){
+    this.pos = newPos;
+    this.update();
+  }
 
+  rotate(newPerifs){
+    this.perifs = newPerifs;
+    this.update();
+  }
+
+  update() {
+    this.remove(this.piece);
+    this.piece = this.createPiece();
+    this.add(this.piece);
   }
 
 }

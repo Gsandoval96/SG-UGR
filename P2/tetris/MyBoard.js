@@ -5,33 +5,47 @@ class MyBoard extends THREE.Object3D {
   static WIDTH = 11;
   static HEIGHT = 15;
 
-  static inBounds(coord){
+  inBounds(coord){
 
     var inBounds = true;
 
     if(coord.x < 0 || coord.x > MyBoard.WIDTH-1)
       inBounds = false;
 
-    if(coord.y < 0)
-      inBounds = false;
-
     return inBounds;
   }
 
-  static pieceInBounds(piece){
+  pieceInBounds(piece){
 
     var coord = new THREE.Vector2(piece.pos.x, piece.pos.y);
-    var inBounds = MyBoard.inBounds(coord);
+    var inBounds = this.inBounds(coord);
 
     for(var i = 0; i<3 && inBounds; i++){
       var perif = piece.perifs.getComponent(i);
       var posPerif = new THREE.Vector2(coord.x + perif.x,
                                        coord.y + perif.y);
-      inBounds = MyBoard.inBounds(posPerif);
+      inBounds = this.inBounds(posPerif);
     }
 
     return inBounds;
 
+  }
+
+  isColliding(piece){
+    var collide = false;
+
+    var coord = new THREE.Vector2(piece.pos.x, piece.pos.y);
+
+    if(coord.y < 0) collide = true;
+
+    for(var i = 0; i<3 && !collide; i++){
+      var perif = piece.perifs.getComponent(i);
+      var posPerif = new THREE.Vector2(coord.x + perif.x,
+                                       coord.y + perif.y);
+      if(posPerif.y < 0) collide = true;
+    }
+
+    return collide;
   }
 
   constructor() {
@@ -69,38 +83,100 @@ class MyBoard extends THREE.Object3D {
 
     this.piece = new MyPiece(5,12);
     this.add(this.piece);
+
+    //Animaciones con TWEEN
+    var origen = { p : 0 } ;
+    var destino = { p : 1 } ;
+    var that = this;
+
+    var movimiento = new TWEEN.Tween(origen)
+      .to(destino, 2000) //2 segundos
+      .onUpdate (function(){
+        if(origen.p == 1)
+          that.movePiece(0,-1);
+      })
+      .repeat(Infinity)
+      .start();
   }
 
-  pinUp(){
-    var posX = this.piece.pos.x;
-    var posY = this.piece.pos.y;
+  movePiece(distX, distY){
+
+    var newPos = new THREE.Vector3(this.piece.pos.x + distX, this.piece.pos.y + distY, 0);
+
+    var newPiece = new MyPiece(0,0);
+    newPiece.copy(this.piece);
+    newPiece.pos = newPos;
+
+    var inBounds = this.pieceInBounds(newPiece);
+    var collide = this.isColliding(newPiece);
+
+    if(collide){
+       this.pinUp(this.piece);
+    }
+
+    if(inBounds && !collide){
+      this.piece.move(newPiece.pos);
+    }
+  }
+
+  rotatePiece(dir){
+
+    var rot;
+
+    if(dir == 'R')
+      rot = new THREE.Vector2(1,-1);
+    else
+      rot = new THREE.Vector2(-1,1);
+
+    var newPerifs = new THREE.Vector3(THREE.Vector2(0,0), THREE.Vector2(0,0), THREE.Vector2(0,0));
+
+    for(var i=0; i<3; i++){
+      var perif = this.piece.perifs.getComponent(i);
+      var newPerif = new THREE.Vector2(perif.y*rot.x,perif.x*rot.y);
+      newPerifs.setComponent(i,newPerif);
+    }
+
+    var newPiece = new MyPiece(0,0);
+    newPiece.copy(this.piece);
+    newPiece.perifs = newPerifs;
+
+    var inBounds = this.pieceInBounds(newPiece);
+
+    if(inBounds){
+      this.piece.rotate(newPerifs);
+    }
+  }
+
+  pinUp(piece){
+    console.log("PINUP");
+    console.log(piece);
+    var posX = piece.pos.x;
+    var posY = piece.pos.y;
+    var material = piece.material;
 
     var pos = posX * (MyBoard.HEIGHT) + posY;
-    this.children[pos].box.material = this.piece.material;
+    this.children[pos].box.material = material;
 
     for(var i = 0; i < 3; i++){
-      var perif = this.piece.perifs.getComponent(i);
+      var perif = piece.perifs.getComponent(i);
       var posPerif = new THREE.Vector2(posX + perif.x, posY + perif.y);
 
       pos = posPerif.x * (MyBoard.HEIGHT) + posPerif.y;
-      this.children[pos].box.material = this.piece.material;
+      this.children[pos].box.material = material;
     }
 
     this.respawn();
   }
 
   respawn(){
+    console.log("RESPAWN");
     this.remove(this.piece);
     this.piece = new MyPiece(5,12);
     this.add(this.piece);
   }
 
-  isColliding(){
-  return null;
-  }
-
   update () {
-
+    TWEEN.update();
   }
 
 }

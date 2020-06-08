@@ -34,6 +34,21 @@ class MyScene extends THREE.Scene {
     this.board = new MyBoard();
     this.add (this.board);
 
+    this.listener = new THREE.AudioListener();
+    this.camera.add( this.listener );
+
+    var listener = new THREE.AudioListener();
+    var sound = new THREE.Audio( listener );
+    var file = '../audio/Bad_Cat_Master.mp3';
+
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( file, function( buffer ) {
+      sound.setBuffer( buffer );
+      sound.setLoop( true );
+      sound.setVolume( 0.1 );
+      //sound.play();
+    });
+
   }
 
   createCamera () {
@@ -47,6 +62,7 @@ class MyScene extends THREE.Scene {
     // Y hacia dónde mira
     var look = new THREE.Vector3 (5,5,0);
     this.camera.lookAt(look);
+
     this.add (this.camera);
 
     // Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
@@ -149,15 +165,15 @@ class MyScene extends THREE.Scene {
 
     //console.log(key);
 
-    if (key == 81 ){this.board.piece.rotate('L')} //Q
-    if (key == 69 ){this.board.piece.rotate('R')} //E
+    if (key == 81 ){this.board.rotatePiece('L')} //Q
+    if (key == 69 ){this.board.rotatePiece('R')} //E
 
     if (key == 32 ){this.board.pinUp()} //Espacio
 
-    if (key == 37 ){this.board.piece.move(-1,0)} //Flecha Izquierda
-    if (key == 38 ){this.board.piece.move(0,1)} //Flecha Arriba
-    if (key == 39 ){this.board.piece.move(1,0)} //Flecha Derecha
-    if (key == 40 ){this.board.piece.move(0,-1)} //Flecha Abajo
+    if (key == 37 ){this.board.movePiece(-1,0)} //Flecha Izquierda
+    if (key == 38 ){this.board.movePiece(0,1)} //Flecha Arriba
+    if (key == 39 ){this.board.movePiece(1,0)} //Flecha Derecha
+    if (key == 40 ){this.board.movePiece(0,-1)} //Flecha Abajo
 
   }
 
@@ -178,6 +194,8 @@ class MyScene extends THREE.Scene {
     // Se actualiza la posición de la cámara según su controlador
     this.cameraControl.update();
 
+    this.board.update();
+
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
   }
@@ -192,11 +210,6 @@ $(function () {
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener ("resize", () => scene.onWindowResize());
   window.addEventListener ("keydown", (event) => scene.onKeyDown(event));
-
-  var audio = new Audio('../audio/tetris.mp3',null);
-  audio.loop = true;
-  audio.volume = 0.1;
-  //audio.play();
 
   // Que no se nos olvide, la primera visualización.
   scene.update();
