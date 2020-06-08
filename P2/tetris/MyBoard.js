@@ -55,7 +55,7 @@ class MyBoard extends THREE.Object3D {
     var posX = piece.pos.x;
     var posY = piece.pos.y;
 
-    var pos = posX * (MyBoard.HEIGHT) + posY;
+    var pos = posY * (MyBoard.WIDTH) + posX;
     var material = this.children[pos].box.material;
 
     if(material != MyBoard.insideMat)
@@ -65,7 +65,7 @@ class MyBoard extends THREE.Object3D {
       var perif = piece.perifs.getComponent(i);
       var posPerif = new THREE.Vector2(posX + perif.x, posY + perif.y);
 
-      pos = posPerif.x * (MyBoard.HEIGHT) + posPerif.y;
+      pos = posPerif.y * (MyBoard.WIDTH) + posPerif.x;
       material = this.children[pos].box.material;
 
       if(material != MyBoard.insideMat)
@@ -94,10 +94,10 @@ class MyBoard extends THREE.Object3D {
       }
     }*/
 
-    for(var i = 0; i < MyBoard.WIDTH; i++){
-      for(var j = 0; j < MyBoard.HEIGHT; j++){
+    for(var i = 0; i < MyBoard.HEIGHT; i++){
+      for(var j = 0; j < MyBoard.WIDTH; j++){
 
-        var position = new THREE.Vector3(i,j,0);
+        var position = new THREE.Vector3(j,i,0);
         var cube;
 
         cube = new MyCube(position, MyBoard.insideMat);
@@ -193,18 +193,36 @@ class MyBoard extends THREE.Object3D {
     var posY = piece.pos.y;
     var material = piece.material;
 
-    var pos = posX * (MyBoard.HEIGHT) + posY;
+    var pos = posY * (MyBoard.WIDTH) + posX;
     this.children[pos].box.material = material;
 
     for(var i = 0; i < 3; i++){
       var perif = piece.perifs.getComponent(i);
       var posPerif = new THREE.Vector2(posX + perif.x, posY + perif.y);
 
-      pos = posPerif.x * (MyBoard.HEIGHT) + posPerif.y;
+      pos = posPerif.y * (MyBoard.WIDTH) + posPerif.x;
       this.children[pos].box.material = material;
     }
-
+    this.checkRow();
     this.respawn();
+  }
+
+  checkRow(){
+    var fullRow;
+    var pos;
+    var material;
+
+    for(var i = 0; i < MyBoard.HEIGHT; i++){
+      fullRow = true;
+      for(var j = 0; j < MyBoard.WIDTH && fullRow; j++){
+
+        pos = i * (MyBoard.WIDTH) + j;
+        material = this.children[pos].box.material;
+        if(material == MyBoard.insideMat)
+          fullRow = false;
+      }
+      if(fullRow) console.log("FILA-LLENA");
+    }
   }
 
   respawn(){
