@@ -157,6 +157,7 @@ class MyBoard extends THREE.Object3D {
     else{
       this.piece.move(newPiece.pos);
     }
+    return collision;
   }
 
   rotatePiece(dir){
@@ -209,7 +210,10 @@ class MyBoard extends THREE.Object3D {
   }
 
   hardDrop(){
-    
+    var collide = true;
+    do{
+      collide = this.dropPiece();
+    }while(!collide);
   }
 
   checkRow(){
