@@ -23,6 +23,8 @@ class MyBoard extends THREE.Object3D {
       }
     }
 
+    this.gameOver = false;
+
     this.piece = new MyPiece(5,MyBoard.HEIGHT-3);
     this.add(this.piece);
 
@@ -44,8 +46,8 @@ class MyBoard extends THREE.Object3D {
     // Title
 
     var titlePos = new THREE.Vector3(0, MyBoard.HEIGHT+1.5, 0.5);
-    this.tetris = new MyTitle(titlePos,2);
-    this.add(this.tetris);
+    this.title = new MyTitle(titlePos,2);
+    this.add(this.title);
 
     // TextGeometry
 
@@ -81,7 +83,7 @@ class MyBoard extends THREE.Object3D {
     var that = this;
 
     var movimiento = new TWEEN.Tween(origen)
-      .to(destino, 100) //1 segundo
+      .to(destino, 1000) //1 segundo
       .onUpdate (function(){
         if(origen.p == 1)
           that.dropPiece('GRAVITY');
@@ -91,33 +93,35 @@ class MyBoard extends THREE.Object3D {
   }
 
   savePiece(){
-    if(!this.justSaved){
-      if(this.savedPiece == null){
-        this.savedPiece = new MyPiece(0,0);
-        var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-10,0);
-        this.piece.pos = savePos;
-        this.savedPiece.simpleCopy(this.piece);
-        this.add(this.savedPiece);
+    if(!this.gameOver){
+      if(!this.justSaved){
+        if(this.savedPiece == null){
+          this.savedPiece = new MyPiece(0,0);
+          var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-10,0);
+          this.piece.pos = savePos;
+          this.savedPiece.simpleCopy(this.piece);
+          this.add(this.savedPiece);
 
-        this.respawn();
+          this.respawn();
+        }
+        else{
+          var auxPiece = new MyPiece(0,0);
+          auxPiece.copy(this.savedPiece);
+
+          var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-10,0);
+          this.piece.pos = savePos;
+          this.remove(this.savedPiece);
+          this.savedPiece.simpleCopy(this.piece);
+          this.add(this.savedPiece);
+
+          var respawnPos = new THREE.Vector3(5,MyBoard.HEIGHT-3,0);
+          auxPiece.pos = respawnPos;
+          this.remove(this.piece);
+          this.piece.simpleCopy(auxPiece);
+          this.add(this.piece);
+        }
+        this.justSaved = true;
       }
-      else{
-        var auxPiece = new MyPiece(0,0);
-        auxPiece.copy(this.savedPiece);
-
-        var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-10,0);
-        this.piece.pos = savePos;
-        this.remove(this.savedPiece);
-        this.savedPiece.simpleCopy(this.piece);
-        this.add(this.savedPiece);
-
-        var respawnPos = new THREE.Vector3(5,MyBoard.HEIGHT-3,0);
-        auxPiece.pos = respawnPos;
-        this.remove(this.piece);
-        this.piece.simpleCopy(auxPiece);
-        this.add(this.piece);
-      }
-      this.justSaved = true;
     }
   }
 
@@ -387,15 +391,22 @@ class MyBoard extends THREE.Object3D {
   }
 
   respawn(){
-    var respawnPos = new THREE.Vector3(5,MyBoard.HEIGHT-3,0);
-    this.nextPiece.pos = respawnPos;
-    this.remove(this.piece);
-    this.piece.simpleCopy(this.nextPiece);
-    this.add(this.piece);
+    if(!this.gameOver){
+      var respawnPos = new THREE.Vector3(5,MyBoard.HEIGHT-3,0);
+      this.nextPiece.pos = respawnPos;
+      this.remove(this.piece);
+      this.piece.simpleCopy(this.nextPiece);
+      this.add(this.piece);
 
-    this.remove(this.nextPiece);
-    this.nextPiece = new MyPiece(MyBoard.WIDTH+2,MyBoard.HEIGHT-3);
-    this.add(this.nextPiece);
+      this.remove(this.nextPiece);
+      this.nextPiece = new MyPiece(MyBoard.WIDTH+2,MyBoard.HEIGHT-3);
+      this.add(this.nextPiece);
+
+      if(this.collide(this.piece)){
+        this.gameOver = true;
+        console.log("GAME OVER");
+      }
+    }
   }
 
   update () {
