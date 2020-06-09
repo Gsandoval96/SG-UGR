@@ -36,26 +36,44 @@ class MyBoard extends THREE.Object3D {
 
     this.level = 1;
     this.lines = 0;
+    this.score = 0;
+    this.scoreValue = [0,40,100,300,1200];
     this.goal = 5 *this.level;
-    this.values= [0,1,3,5,8];
+    this.lineValue = [0,1,3,5,8];
+
+    // Title
+
+    var titlePos = new THREE.Vector3(0, MyBoard.HEIGHT+1.5, 0.5);
+    this.tetris = new MyTitle(titlePos,2);
+    this.add(this.tetris);
 
     // TextGeometry
 
-    var textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5,1);
-    var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5);
+    this.materialText = new THREE.MeshStandardMaterial({color: 0xFFFFFF});
+
+    var textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5.5,1);
+    var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5,this.materialText);
     this.add(nextPieceText);
 
-    textPosition = new THREE.Vector3(MyBoard.WIDTH+2,5.5,1);
-    var savedPieceText = new MyText(textPosition,'HOLD',0.5);
+    textPosition = new THREE.Vector3(MyBoard.WIDTH+2,7.5,1);
+    var savedPieceText = new MyText(textPosition,'HOLD',0.5,this.materialText);
     this.add(savedPieceText);
 
     this.textPositionLevel = new THREE.Vector3(3,-2,0.5);
-    this.levelText = new MyText(this.textPositionLevel,'LEVEL '+this.level,1);
+    this.levelText = new MyText(this.textPositionLevel,'LEVEL '+this.level,1,this.materialText);
     this.add(this.levelText);
 
-    this.textPositionLines = new THREE.Vector3(MyBoard.WIDTH+2,2,1);
-    this.linesText = new MyText(this.textPositionLines,'Lines ' + this.lines + "/" + this.goal,0.5);
+    this.textPositionLines = new THREE.Vector3(MyBoard.WIDTH+2,2.5,1);
+    this.linesText = new MyText(this.textPositionLines,'LINES ' + this.lines + "/" + this.goal,0.5,this.materialText);
     this.add(this.linesText);
+
+    var textPositionScore = new THREE.Vector3(MyBoard.WIDTH+2,1,1);
+    var scoreText = new MyText(textPositionScore,'SCORE',0.5,this.materialText);
+    this.add(scoreText);
+
+    this.textPositionScoreValue = new THREE.Vector3(MyBoard.WIDTH+4.5,1,1);
+    this.scoreTextValue = new MyText(this.textPositionScoreValue,this.score.toString(),0.5,this.materialText);
+    this.add(this.scoreTextValue);
 
     //Animaciones con TWEEN
     var origen = { p : 0 } ;
@@ -63,10 +81,10 @@ class MyBoard extends THREE.Object3D {
     var that = this;
 
     var movimiento = new TWEEN.Tween(origen)
-      .to(destino, 2000) //2 segundos
+      .to(destino, 1000) //1 segundo
       .onUpdate (function(){
         if(origen.p == 1)
-          that.dropPiece();
+          that.dropPiece('GRAVITY');
       })
       .repeat(Infinity)
       .start();
@@ -76,7 +94,7 @@ class MyBoard extends THREE.Object3D {
     if(!this.justSaved){
       if(this.savedPiece == null){
         this.savedPiece = new MyPiece(0,0);
-        var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-12,0);
+        var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-10,0);
         this.piece.pos = savePos;
         this.savedPiece.simpleCopy(this.piece);
         this.add(this.savedPiece);
@@ -87,7 +105,7 @@ class MyBoard extends THREE.Object3D {
         var auxPiece = new MyPiece(0,0);
         auxPiece.copy(this.savedPiece);
 
-        var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-12,0);
+        var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-10,0);
         this.piece.pos = savePos;
         this.remove(this.savedPiece);
         this.savedPiece.simpleCopy(this.piece);
@@ -187,7 +205,9 @@ class MyBoard extends THREE.Object3D {
     }
   }
 
-  dropPiece(){
+  dropPiece(dropType){
+    if(dropType != 'GRAVITY') this.addDropScore(dropType);
+
     var newPos = new THREE.Vector3(this.piece.pos.x, this.piece.pos.y-1, 0);
 
     var newPiece = new MyPiece(0,0);
@@ -260,7 +280,7 @@ class MyBoard extends THREE.Object3D {
   hardDrop(){
     var collide = true;
     do{
-      collide = this.dropPiece();
+      collide = this.dropPiece('HARD');
     }while(!collide);
   }
 
@@ -285,13 +305,14 @@ class MyBoard extends THREE.Object3D {
       }
     }
     if(rows.length != 0){
-      this.addPoints(rows.length);
+      this.addLineScore(rows.length);
       this.clearRows(rows);
     }
   }
 
-  addPoints(n){
-    this.lines += this.values[n];
+  addLineScore(n){
+    this.lines += this.lineValue[n];
+    this.score += this.level * this.scoreValue[n];
 
     if(this.lines >= this.goal){
       this.level++;
@@ -299,13 +320,43 @@ class MyBoard extends THREE.Object3D {
       this.goal = 5 * this.level;
 
       this.remove(this.levelText);
-      this.levelText = new MyText(this.textPositionLevel,'LEVEL '+this.level,1);
+      this.levelText = new MyText(this.textPositionLevel,'LEVEL '+this.level,1,this.materialText);
       this.add(this.levelText);
+
+      //Animaciones con TWEEN
+      var origen = { p : 5 } ;
+      var destino = { p : 0.5 } ;
+      var that = this;
+
+      var movimiento = new TWEEN.Tween(origen)
+        .to(destino, 2000) //2 segundos
+        .onUpdate (function(){
+            that.levelText.position.z = origen.p;
+        })
+        .start();
     }
 
     this.remove(this.linesText);
-    this.linesText = new MyText(this.textPositionLines,'Lines ' + this.lines + "/" + this.goal,0.5);
+    this.linesText = new MyText(this.textPositionLines,'Lines ' + this.lines + "/" + this.goal,0.5,this.materialText);
     this.add(this.linesText);
+
+    this.remove(this.scoreTextValue);
+    this.scoreTextValue = new MyText(this.textPositionScoreValue,this.score.toString(),0.5,this.materialText);
+    this.add(this.scoreTextValue);
+  }
+
+  addDropScore(type){
+    switch (type){
+      case 'SOFT':
+        this.score += 1;
+      break;
+      case 'HARD':
+        this.score += 2;
+      break;
+    }
+    this.remove(this.scoreTextValue);
+    this.scoreTextValue = new MyText(this.textPositionScoreValue,this.score.toString(),0.5,this.materialText);
+    this.add(this.scoreTextValue);
   }
 
   clearRows(rows){

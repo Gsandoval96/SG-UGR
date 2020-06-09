@@ -1,5 +1,5 @@
 class MyText extends THREE.Object3D {
-  constructor(pos, text, size) {
+  constructor(pos, text, size, mat) {
     super();
 
     var that = this;
@@ -12,7 +12,7 @@ class MyText extends THREE.Object3D {
     		font: font,
     		size: size,
     		height: size/5,
-    		curveSegments: 12,
+    		curveSegments: 5,
     		bevelEnabled: true,
     		bevelThickness: size/5,
     		bevelSize: size/20,
@@ -20,8 +20,7 @@ class MyText extends THREE.Object3D {
     		bevelSegments: 2
     	} );
 
-      var material = new THREE.MeshStandardMaterial({color: 0xFFFFFF});
-      var mesh = new THREE.Mesh(geometry, material);
+      var mesh = new THREE.Mesh(geometry, mat);
       mesh.position.set(pos.x, pos.y, pos.z);
 
       that.add(mesh);

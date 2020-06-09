@@ -175,11 +175,11 @@ class MyScene extends THREE.Scene {
 
     if (key == 37 ){this.board.movePiece(-1);} //Flecha Izquierda
     if (key == 39 ){this.board.movePiece(1);} //Flecha Derecha
-    if (key == 40 ){this.board.dropPiece();} //Flecha Abajo
+    if (key == 40 ){this.board.dropPiece('SOFT');} //Flecha Abajo
 
     // if (key == 65 ){this.board.movePiece(-1);} //A
     // if (key == 68 ){this.board.movePiece(1);} //D
-    // if (key == 83 ){this.board.dropPiece();} //S
+    // if (key == 83 ){this.board.dropPiece('SOFT');} //S
     //
     // if (key == 87 ){this.board.hardDrop();} //W
 
