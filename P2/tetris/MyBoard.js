@@ -26,6 +26,9 @@ class MyBoard extends THREE.Object3D {
     this.piece = new MyPiece(5,12);
     this.add(this.piece);
 
+    this.nextPiece = new MyPiece(13,12);
+    this.add(this.nextPiece);
+
     //Animaciones con TWEEN
     var origen = { p : 0 } ;
     var destino = { p : 1 } ;
@@ -253,8 +256,18 @@ class MyBoard extends THREE.Object3D {
 
   respawn(){
     this.remove(this.piece);
-    this.piece = new MyPiece(5,12);
-    this.add(this.piece);
+    var respawnPos = new THREE.Vector2(5,12);
+    this.nextPiece.pos = respawnPos;
+    this.piece = this.nextPiece;
+
+    this.nextPiece = new MyPiece(13,12);
+    this.add(this.nextPiece);
+
+    console.log("PIEZA ACTUAL = " + this.children[165].type);
+    console.log("PIEZA NEXT = " + this.children[166].type);
+
+    this.movePiece(-1);
+    this.movePiece(1);
   }
 
   update () {
