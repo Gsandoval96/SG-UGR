@@ -32,9 +32,14 @@ class MyBoard extends THREE.Object3D {
     this.savedPiece = null;
     this.justSaved = false;
 
-    // TextGeometry
+    // Level Manager
 
-    this.level = 0;
+    this.level = 1;
+    this.lines = 0;
+    this.goal = 5 *this.level;
+    this.values= [0,1,3,5,8];
+
+    // TextGeometry
 
     var textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5,1);
     var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5);
@@ -44,9 +49,13 @@ class MyBoard extends THREE.Object3D {
     var savedPieceText = new MyText(textPosition,'HOLD',0.5);
     this.add(savedPieceText);
 
-    textPosition = new THREE.Vector3(3,-2,0.5);
-    var levelText = new MyText(textPosition,'LEVEL '+this.level,1);
-    this.add(levelText);
+    this.textPositionLevel = new THREE.Vector3(3,-2,0.5);
+    this.levelText = new MyText(this.textPositionLevel,'LEVEL '+this.level,1);
+    this.add(this.levelText);
+
+    this.textPositionLines = new THREE.Vector3(MyBoard.WIDTH+2,2,1);
+    this.linesText = new MyText(this.textPositionLines,'Lines ' + this.lines + "/" + this.goal,0.5);
+    this.add(this.linesText);
 
     //Animaciones con TWEEN
     var origen = { p : 0 } ;
@@ -272,11 +281,31 @@ class MyBoard extends THREE.Object3D {
           fullRow = false;
       }
       if(fullRow){
-        console.log("FILA-LLENA");
         rows.unshift(i);
       }
     }
-    if(rows.length != 0) this.clearRows(rows);
+    if(rows.length != 0){
+      this.addPoints(rows.length);
+      this.clearRows(rows);
+    }
+  }
+
+  addPoints(n){
+    this.lines += this.values[n];
+
+    if(this.lines >= this.goal){
+      this.level++;
+      this.lines %= this.goal;
+      this.goal = 5 * this.level;
+
+      this.remove(this.levelText);
+      this.levelText = new MyText(this.textPositionLevel,'LEVEL '+this.level,1);
+      this.add(this.levelText);
+    }
+
+    this.remove(this.linesText);
+    this.linesText = new MyText(this.textPositionLines,'Lines ' + this.lines + "/" + this.goal,0.5);
+    this.add(this.linesText);
   }
 
   clearRows(rows){

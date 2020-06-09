@@ -3,7 +3,7 @@ class MyPiece extends THREE.Object3D {
   constructor(posX, posY) {
     super();
 
-    this.type = this.randomType();
+    this.type = 'I';//this.randomType();
 
     this.material = this.createMaterial();
     this.pos = new THREE.Vector3(posX, posY, 0);
