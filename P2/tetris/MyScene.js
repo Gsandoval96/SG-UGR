@@ -19,7 +19,7 @@ class MyScene extends THREE.Scene {
     // Creamos y gestionamos el audio que sonará de fondo
     this.listener = new THREE.AudioListener();
     var sound = new THREE.Audio( this.listener );
-    var file = '../audio/Bad_Cat_Master.mp3';
+    var file = '../audio/tetris-99.mp3';
 
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load( file, function( buffer ) {
