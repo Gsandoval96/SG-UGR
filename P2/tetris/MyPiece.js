@@ -16,12 +16,20 @@ class MyPiece extends THREE.Object3D {
   }
 
   copy(p){
-      this.type = p.type;
-      this.material = p.material;
-      this.pos = p.pos;
-      this.perifs = p.perifs;
+    this.type = p.type;
+    this.material = p.material;
+    this.pos = p.pos;
+    this.perifs = p.perifs;
 
-      this.update();
+    this.update();
+  }
+
+  simpleCopy(p){
+    this.type = p.type;
+    this.material = p.material;
+    this.pos = p.pos;
+    this.perifs = this.createPerifs();
+    this.update();
   }
 
   randomType(){

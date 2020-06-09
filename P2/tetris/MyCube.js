@@ -18,9 +18,4 @@ class MyCube extends THREE.Object3D {
     // Y añadirlo como hijo del Object3D
     this.add (this.box);
   }
-
-  update () {
-
-  }
-
 }

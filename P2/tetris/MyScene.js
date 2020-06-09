@@ -1,9 +1,3 @@
-
-/// La clase fachada del modelo
-/**
- * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
- */
-
 class MyScene extends THREE.Scene {
   constructor (myCanvas) {
     super();
@@ -44,30 +38,30 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.freeCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     // También se indica dónde se coloca
-    this.freeCam.position.set (6, 7.5, 30);
+    this.freeCam.position.set (6, 10.5, 35);
     // Y hacia dónde mira
-    var lookFree = new THREE.Vector3 (6, 7.5, 0);
+    var lookFree = new THREE.Vector3 (6, 10.5, 0);
     this.freeCam.lookAt(lookFree);
 
     this.add (this.freeCam);
 
     this.frontCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.frontCam.position.set (6, 7.5, 30);
-    var lookFront = new THREE.Vector3 (6, 7.5, 0);
+    this.frontCam.position.set (6, 10.5, 35);
+    var lookFront = new THREE.Vector3 (6, 10.5, 0);
     this.frontCam.lookAt(lookFront);
 
     this.add (this.frontCam);
 
     this.sideCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.sideCam.position.set (15, 7.5, 30);
-    var lookSide = new THREE.Vector3 (5, 7.5, 0);
+    this.sideCam.position.set (15, 10.5, 35);
+    var lookSide = new THREE.Vector3 (5, 10.5, 0);
     this.sideCam.lookAt(lookSide);
 
     this.add (this.sideCam);
 
     this.upsideDownCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.upsideDownCam.position.set (5, 7.5, 30);
-    var lookDown = new THREE.Vector3 (5, 7.5, 0);
+    this.upsideDownCam.position.set (5, 10.5, 35);
+    var lookDown = new THREE.Vector3 (5, 10.5, 0);
     var up = new THREE.Vector3(0,-1,0);
     this.upsideDownCam.up = up;
     this.upsideDownCam.lookAt(lookDown);
@@ -99,7 +93,7 @@ class MyScene extends THREE.Scene {
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
     var lightIntensity = 0.5;
     this.spotLight = new THREE.SpotLight( 0xffffff, lightIntensity );
-    this.spotLight.position.set( 0, 30, 100 );
+    this.spotLight.position.set( 0, 35, 100 );
     this.add (this.spotLight);
   }
 

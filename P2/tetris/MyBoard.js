@@ -3,7 +3,7 @@
 class MyBoard extends THREE.Object3D {
 
   static WIDTH = 11;
-  static HEIGHT = 15;
+  static HEIGHT = 20;
 
   static insideMat = new THREE.MeshStandardMaterial({color: 0xFFFFFF, opacity:0.25,transparent:true});
 
@@ -23,14 +23,30 @@ class MyBoard extends THREE.Object3D {
       }
     }
 
-    this.piece = new MyPiece(5,12);
+    this.piece = new MyPiece(5,MyBoard.HEIGHT-3);
     this.add(this.piece);
 
-    this.nextPiece = new MyPiece(13,12);
+    this.nextPiece = new MyPiece(MyBoard.WIDTH+2,MyBoard.HEIGHT-3);
     this.add(this.nextPiece);
 
     this.savedPiece = null;
     this.justSaved = false;
+
+    // TextGeometry
+
+    this.level = 0;
+
+    var textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5,1);
+    var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5);
+    this.add(nextPieceText);
+
+    textPosition = new THREE.Vector3(MyBoard.WIDTH+2,5.5,1);
+    var savedPieceText = new MyText(textPosition,'HOLD',0.5);
+    this.add(savedPieceText);
+
+    textPosition = new THREE.Vector3(3,-2,0.5);
+    var levelText = new MyText(textPosition,'LEVEL '+this.level,1);
+    this.add(levelText);
 
     //Animaciones con TWEEN
     var origen = { p : 0 } ;
@@ -51,9 +67,9 @@ class MyBoard extends THREE.Object3D {
     if(!this.justSaved){
       if(this.savedPiece == null){
         this.savedPiece = new MyPiece(0,0);
-        var savePos = new THREE.Vector3(13,5,0);
+        var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-12,0);
         this.piece.pos = savePos;
-        this.savedPiece.copy(this.piece);
+        this.savedPiece.simpleCopy(this.piece);
         this.add(this.savedPiece);
 
         this.respawn();
@@ -62,16 +78,16 @@ class MyBoard extends THREE.Object3D {
         var auxPiece = new MyPiece(0,0);
         auxPiece.copy(this.savedPiece);
 
-        var savePos = new THREE.Vector3(13,5,0);
+        var savePos = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-12,0);
         this.piece.pos = savePos;
         this.remove(this.savedPiece);
-        this.savedPiece.copy(this.piece);
+        this.savedPiece.simpleCopy(this.piece);
         this.add(this.savedPiece);
 
-        var respawnPos = new THREE.Vector3(5,12,0);
+        var respawnPos = new THREE.Vector3(5,MyBoard.HEIGHT-3,0);
         auxPiece.pos = respawnPos;
         this.remove(this.piece);
-        this.piece.copy(auxPiece);
+        this.piece.simpleCopy(auxPiece);
         this.add(this.piece);
       }
       this.justSaved = true;
@@ -291,14 +307,14 @@ class MyBoard extends THREE.Object3D {
   }
 
   respawn(){
-    var respawnPos = new THREE.Vector3(5,12,0);
+    var respawnPos = new THREE.Vector3(5,MyBoard.HEIGHT-3,0);
     this.nextPiece.pos = respawnPos;
     this.remove(this.piece);
-    this.piece.copy(this.nextPiece);
+    this.piece.simpleCopy(this.nextPiece);
     this.add(this.piece);
 
     this.remove(this.nextPiece);
-    this.nextPiece = new MyPiece(13,12);
+    this.nextPiece = new MyPiece(MyBoard.WIDTH+2,MyBoard.HEIGHT-3);
     this.add(this.nextPiece);
   }
 
