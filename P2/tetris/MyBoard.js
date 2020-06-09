@@ -26,8 +26,6 @@ class MyBoard extends THREE.Object3D {
     this.piece = new MyPiece(5,12);
     this.add(this.piece);
 
-    
-
     //Animaciones con TWEEN
     var origen = { p : 0 } ;
     var destino = { p : 1 } ;

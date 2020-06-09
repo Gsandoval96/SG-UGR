@@ -14,8 +14,9 @@ class MyScene extends THREE.Scene {
     // Creamos las luces
     this.createLights ();
 
-    // Creamos la cámara
+    // Creamos las cámaras
     this.createCamera ();
+    this.camera = 1;
 
     // Creamos el tablero y lo añadimos a la escena
     this.board = new MyBoard();
@@ -41,29 +42,46 @@ class MyScene extends THREE.Scene {
     //   El ángulo del campo de visión en grados sexagesimales
     //   La razón de aspecto ancho/alto
     //   Los planos de recorte cercano y lejano
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.freeCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     // También se indica dónde se coloca
-    this.camera.position.set (5, 7.5, 30);
+    this.freeCam.position.set (6, 7.5, 30);
     // Y hacia dónde mira
-    var look = new THREE.Vector3 (5, 7.5, 0);
-    this.camera.lookAt(look);
-    //------------------------------
-    // ORIENTACIÓN DE LA CÁMARA
-    //------------------------------
-    // var up = new THREE.Vector3(0,-1,0);
-    // this.camera.up = up;
-    // -------------------------------
+    var lookFree = new THREE.Vector3 (6, 7.5, 0);
+    this.freeCam.lookAt(lookFree);
 
-    this.add (this.camera);
+    this.add (this.freeCam);
+
+    this.frontCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.frontCam.position.set (6, 7.5, 30);
+    var lookFront = new THREE.Vector3 (6, 7.5, 0);
+    this.frontCam.lookAt(lookFront);
+
+    this.add (this.frontCam);
+
+    this.sideCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.sideCam.position.set (15, 7.5, 30);
+    var lookSide = new THREE.Vector3 (5, 7.5, 0);
+    this.sideCam.lookAt(lookSide);
+
+    this.add (this.sideCam);
+
+    this.upsideDownCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.upsideDownCam.position.set (5, 7.5, 30);
+    var lookDown = new THREE.Vector3 (5, 7.5, 0);
+    var up = new THREE.Vector3(0,-1,0);
+    this.upsideDownCam.up = up;
+    this.upsideDownCam.lookAt(lookDown);
+
+    this.add (this.upsideDownCam);
 
     // Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
-    this.cameraControl = new THREE.TrackballControls (this.camera, this.renderer.domElement);
+    this.cameraControl = new THREE.TrackballControls (this.freeCam, this.renderer.domElement);
     // Se configuran las velocidades de los movimientos
     this.cameraControl.rotateSpeed = 5;
     this.cameraControl.zoomSpeed = -2;
     this.cameraControl.panSpeed = 0.5;
     // Debe orbitar con respecto al punto de mira de la cámara
-    this.cameraControl.target = look;
+    this.cameraControl.target = lookFree;
   }
 
   createLights () {
@@ -104,17 +122,31 @@ class MyScene extends THREE.Scene {
   }
 
   getCamera () {
-    // En principio se devuelve la única cámara que tenemos
-    // Si hubiera varias cámaras, este método decidiría qué cámara devuelve cada vez que es consultado
-    return this.camera;
+    var cam;
+    switch (this.camera){
+      case 1:
+        cam = this.freeCam;
+      break;
+      case 2:
+        cam = this.frontCam;
+      break;
+      case 3:
+        cam = this.sideCam;
+      break;
+      case 4:
+        cam = this.upsideDownCam;
+      break;
+    }
+
+    return cam;
   }
 
   setCameraAspect (ratio) {
     // Cada vez que el usuario modifica el tamaño de la ventana desde el gestor de ventanas de
     // su saltarina operativo hay que actualizar el ratio de aspecto de la cámara
-    this.camera.aspect = ratio;
+    this.getCamera().aspect = ratio;
     // Y si se cambia ese dato hay que actualizar la matriz de proyección de la cámara
-    this.camera.updateProjectionMatrix();
+    this.getCamera().updateProjectionMatrix();
   }
 
   onWindowResize () {
@@ -126,20 +158,27 @@ class MyScene extends THREE.Scene {
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
 
+  changeCamera(cam){
+    this.camera = cam;
+    this.setCameraAspect (window.innerWidth / window.innerHeight);
+  }
+
   onKeyDown(event){
     var key = event.which || event.keyCode;
 
-    //console.log(key);
+    if (key == 49 ){this.changeCamera(1);}
+    if (key == 50 ){this.changeCamera(2);}
+    if (key == 51 ){this.changeCamera(3);}
+    if (key == 52 ){this.changeCamera(4);}
 
-    if (key == 81 ){this.board.rotatePiece('L')} //Q
-    if (key == 69 ){this.board.rotatePiece('R')} //E
+    if (key == 81 ){this.board.rotatePiece('L');} //Q
+    if (key == 69 ){this.board.rotatePiece('R');} //E
 
-    if (key == 32 ){this.board.hardDrop()} //Espacio
+    if (key == 32 ){this.board.hardDrop();} //Espacio
 
-    if (key == 37 ){this.board.movePiece(-1)} //Flecha Izquierda
-    //if (key == 38 ){this.board.movePiece(0,1)} //Flecha Arriba
-    if (key == 39 ){this.board.movePiece(1)} //Flecha Derecha
-    if (key == 40 ){this.board.dropPiece()} //Flecha Abajo
+    if (key == 37 ){this.board.movePiece(-1);} //Flecha Izquierda
+    if (key == 39 ){this.board.movePiece(1);} //Flecha Derecha
+    if (key == 40 ){this.board.dropPiece();} //Flecha Abajo
 
   }
 
