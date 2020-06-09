@@ -166,6 +166,8 @@ class MyScene extends THREE.Scene {
   onKeyDown(event){
     var key = event.which || event.keyCode;
 
+    //console.log(key);
+
     if (key == 49 ){this.changeCamera(1);}
     if (key == 50 ){this.changeCamera(2);}
     if (key == 51 ){this.changeCamera(3);}
@@ -175,10 +177,17 @@ class MyScene extends THREE.Scene {
     if (key == 69 ){this.board.rotatePiece('R');} //E
 
     if (key == 32 ){this.board.hardDrop();} //Espacio
+    if (key == 67 ){this.board.savePiece();} //C
 
     if (key == 37 ){this.board.movePiece(-1);} //Flecha Izquierda
     if (key == 39 ){this.board.movePiece(1);} //Flecha Derecha
     if (key == 40 ){this.board.dropPiece();} //Flecha Abajo
+
+    // if (key == 65 ){this.board.movePiece(-1);} //A
+    // if (key == 68 ){this.board.movePiece(1);} //D
+    // if (key == 83 ){this.board.dropPiece();} //S
+    //
+    // if (key == 87 ){this.board.hardDrop();} //W
 
   }
 

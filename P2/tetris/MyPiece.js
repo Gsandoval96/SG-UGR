@@ -20,7 +20,8 @@ class MyPiece extends THREE.Object3D {
       this.material = p.material;
       this.pos = p.pos;
       this.perifs = p.perifs;
-      this.piece = p.piece;
+
+      this.update();
   }
 
   randomType(){

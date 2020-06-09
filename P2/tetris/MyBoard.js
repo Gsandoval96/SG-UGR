@@ -29,6 +29,9 @@ class MyBoard extends THREE.Object3D {
     this.nextPiece = new MyPiece(13,12);
     this.add(this.nextPiece);
 
+    this.savedPiece = null;
+    this.justSaved = false;
+
     //Animaciones con TWEEN
     var origen = { p : 0 } ;
     var destino = { p : 1 } ;
@@ -42,6 +45,37 @@ class MyBoard extends THREE.Object3D {
       })
       .repeat(Infinity)
       .start();
+  }
+
+  savePiece(){
+    if(!this.justSaved){
+      if(this.savedPiece == null){
+        this.savedPiece = new MyPiece(0,0);
+        var savePos = new THREE.Vector3(13,5,0);
+        this.piece.pos = savePos;
+        this.savedPiece.copy(this.piece);
+        this.add(this.savedPiece);
+
+        this.respawn();
+      }
+      else{
+        var auxPiece = new MyPiece(0,0);
+        auxPiece.copy(this.savedPiece);
+
+        var savePos = new THREE.Vector3(13,5,0);
+        this.piece.pos = savePos;
+        this.remove(this.savedPiece);
+        this.savedPiece.copy(this.piece);
+        this.add(this.savedPiece);
+
+        var respawnPos = new THREE.Vector3(5,12,0);
+        auxPiece.pos = respawnPos;
+        this.remove(this.piece);
+        this.piece.copy(auxPiece);
+        this.add(this.piece);
+      }
+      this.justSaved = true;
+    }
   }
 
   inBounds(coord){
@@ -194,6 +228,8 @@ class MyBoard extends THREE.Object3D {
     }
     this.checkRow();
     this.respawn();
+
+    this.justSaved = false;
   }
 
   hardDrop(){
@@ -255,19 +291,15 @@ class MyBoard extends THREE.Object3D {
   }
 
   respawn(){
-    this.remove(this.piece);
-    var respawnPos = new THREE.Vector2(5,12);
+    var respawnPos = new THREE.Vector3(5,12,0);
     this.nextPiece.pos = respawnPos;
-    this.piece = this.nextPiece;
+    this.remove(this.piece);
+    this.piece.copy(this.nextPiece);
+    this.add(this.piece);
 
+    this.remove(this.nextPiece);
     this.nextPiece = new MyPiece(13,12);
     this.add(this.nextPiece);
-
-    console.log("PIEZA ACTUAL = " + this.children[165].type);
-    console.log("PIEZA NEXT = " + this.children[166].type);
-
-    this.movePiece(-1);
-    this.movePiece(1);
   }
 
   update () {
