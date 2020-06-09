@@ -49,7 +49,7 @@ class MyBoard extends THREE.Object3D {
 
     // TextGeometry
 
-    this.materialText = new THREE.MeshStandardMaterial({color: 0xFFFFFF});
+    this.materialText = MyMaterial.WHITE;
 
     var textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5.5,1);
     var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5,this.materialText);
@@ -81,7 +81,7 @@ class MyBoard extends THREE.Object3D {
     var that = this;
 
     var movimiento = new TWEEN.Tween(origen)
-      .to(destino, 1000) //1 segundo
+      .to(destino, 100) //1 segundo
       .onUpdate (function(){
         if(origen.p == 1)
           that.dropPiece('GRAVITY');

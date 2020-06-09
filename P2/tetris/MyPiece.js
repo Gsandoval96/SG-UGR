@@ -94,31 +94,31 @@ class MyPiece extends THREE.Object3D {
 
     switch (this.type){
       case 'L':
-        material = new THREE.MeshStandardMaterial({color: 0xFF8000});
+        material = MyMaterial.ORANGE;
       break;
 
       case 'J':
-        material = new THREE.MeshStandardMaterial({color: 0x0000FF});
+        material = MyMaterial.BLUE;
       break;
 
       case 'S':
-        material = new THREE.MeshStandardMaterial({color: 0x00FF00});
+        material = MyMaterial.GREEN;
       break;
 
       case 'Z':
-        material = new THREE.MeshStandardMaterial({color: 0xFF0000});
+        material = MyMaterial.RED;
       break;
 
       case 'T':
-        material = new THREE.MeshStandardMaterial({color: 0xFF00FF});
+        material = MyMaterial.PURPLE;
       break;
 
       case 'I':
-        material = new THREE.MeshStandardMaterial({color: 0x00FFFF});
+        material = MyMaterial.CYAN;
       break;
 
       case 'O':
-        material = new THREE.MeshStandardMaterial({color: 0xFFFF00});
+        material = MyMaterial.YELLOW;
       break;
     }
 
