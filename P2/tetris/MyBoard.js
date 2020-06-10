@@ -145,19 +145,20 @@ class MyBoard extends THREE.Object3D {
   }
 
   movePiece(distX){
+    if(!this.gameOver){
+      var newPos = new THREE.Vector3(this.piece.pos.x + distX, this.piece.pos.y, 0);
 
-    var newPos = new THREE.Vector3(this.piece.pos.x + distX, this.piece.pos.y, 0);
+      var newPiece = new MyPiece(0,0);
+      newPiece.copy(this.piece);
+      newPiece.pos = newPos;
 
-    var newPiece = new MyPiece(0,0);
-    newPiece.copy(this.piece);
-    newPiece.pos = newPos;
+      var inBounds = this.pieceInBounds(newPiece);
 
-    var inBounds = this.pieceInBounds(newPiece);
-
-    if(inBounds){
-      var collision = this.isColliding(newPiece);
-      if(!collision)
-        this.piece.move(newPiece.pos);
+      if(inBounds){
+        var collision = this.isColliding(newPiece);
+        if(!collision)
+          this.piece.move(newPiece.pos);
+      }
     }
   }
 
@@ -181,7 +182,7 @@ class MyBoard extends THREE.Object3D {
   }
 
   rotatePiece(dir){
-    if(this.piece.type != 'O'){
+    if(this.piece.type != 'O' && !this.gameOver){
       var rot;
 
       if(dir == 'R')
@@ -312,7 +313,6 @@ class MyBoard extends THREE.Object3D {
 
       if(this.isColliding(this.piece)){
         this.gameOver = true;
-        console.log("GAME OVER");
       }
     }
   }

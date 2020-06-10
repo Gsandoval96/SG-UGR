@@ -17,6 +17,8 @@ class MyGame extends THREE.Object3D {
 
     // Game Manager
 
+    this.gameOver = false;
+
     this.time = 0;
 
     this.level = 1;
@@ -29,9 +31,6 @@ class MyGame extends THREE.Object3D {
     // Gravity parameters
     this.speed = 1500; //1.5 segundos
     this.speedUp = 0.9; //10% más rápido/nivel
-
-    //Animation
-    this.startGravityAnimation();
 
     // TextGeometry
 
@@ -75,19 +74,33 @@ class MyGame extends THREE.Object3D {
     this.add(this.timeValueText);
 
     //Animation
+    this.startGravityAnimation();
+    this.startTimeAnimation();
+  }
 
-    this.timeAnimation();
+
+  levelUpAnimation(){
+    var origin = { p : 5 } ;
+    var destiny = { p : 0.5 } ;
+    var that = this;
+
+    var levelUpAnimation = new TWEEN.Tween(origin)
+      .to(destiny, 2000) //2 segundos
+      .onUpdate (function(){
+          that.levelText.position.z = origin.p;
+      })
+      .start();
   }
 
   startGravityAnimation(){
-    var originGravity = { p : 0 } ;
-    var destinyGravity = { p : 1 } ;
+    var origin = { p : 0 } ;
+    var destiny = { p : 1 } ;
     var that = this;
 
-    this.gravityAnimation = new TWEEN.Tween(originGravity)
-      .to(destinyGravity, that.speed)
+    this.gravityAnimation = new TWEEN.Tween(origin)
+      .to(destiny, that.speed)
       .onUpdate (function(){
-        if(originGravity.p == 1)
+        if(origin.p == 1)
           that.dropPiece('GRAVITY');
       })
       .repeat(Infinity)
@@ -98,34 +111,105 @@ class MyGame extends THREE.Object3D {
     this.gravityAnimation.stop();
   }
 
-  levelUpAnimation(){
-    var originLevel = { p : 5 } ;
-    var destinyLevel = { p : 0.5 } ;
+  startTimeAnimation(){
+    var origin = { p : 0 } ;
+    var destiny = { p : 1 } ;
     var that = this;
 
-    var animationLevel = new TWEEN.Tween(originLevel)
-      .to(destinyLevel, 2000) //2 segundos
+    this.timeAnimation = new TWEEN.Tween(origin)
+      .to(destiny, 1000) //1 segundos
       .onUpdate (function(){
-          that.levelText.position.z = originLevel.p;
-      })
-      .start();
-  }
-
-  timeAnimation(){
-    var originTime = { p : 0 } ;
-    var destinyTime = { p : 1 } ;
-    var that = this;
-
-    var animationTime = new TWEEN.Tween(originTime)
-      .to(destinyTime, 1000) //1 segundos
-      .onUpdate (function(){
-          if(originTime.p == 1){
+          if(origin.p == 1){
             that.time++;
             that.updateTimeText();
           }
       })
       .repeat(Infinity)
       .start();
+  }
+
+  stopTimeAnimation(){
+    this.timeAnimation.stop();
+  }
+
+  gameOverAnimation(){
+
+    var origin = { p : 25} ;
+    var destiny = { p : 12 } ;
+    var that = this;
+
+    var levelUpAnimation = new TWEEN.Tween(origin)
+      .to(destiny, 4000) //4 segundos
+      .onUpdate (function(){
+          that.gameOverText.position.y = origin.p;
+          that.roundBox.position.y = origin.p-6;
+          that.roundBox2.position.y = origin.p-6;
+      })
+      .start();
+  }
+
+  gameOverScreen(){
+    console.log('GAME OVER');
+    console.log("LINES "+this.lines);
+    console.log("TIME "+this.time);
+    console.log("LEVEL "+this.level);
+    console.log("SCORE "+this.score);
+
+    var width = 9;
+    var height = 8;
+    var depth = 0.5;
+    var radius = 0.25;
+
+    var shape = new THREE.Shape();
+
+    shape.absarc( 0, 0, 0, -Math.PI / 2, -Math.PI, true );
+    shape.absarc( 0, height -  radius * 2, 0, Math.PI, Math.PI / 2, true );
+    shape.absarc( width - radius * 2, height -  radius * 2, 0, Math.PI / 2, 0, true );
+    shape.absarc( width - radius * 2, 0, 0, 0, -Math.PI / 2, true );
+
+    var geometry = new THREE.ExtrudeBufferGeometry( shape, {
+        amount: depth,
+        bevelEnabled: true,
+        bevelSegments: 5,
+        steps: 1,
+        bevelSize: radius,
+        bevelThickness: 0,
+        curveSegments: 0
+    });
+
+    geometry.translate(1.25, 0.5, 5);
+    this.roundBox = new THREE.Mesh( geometry, MyMaterial.WHITE) ;
+    this.add(this.roundBox);
+
+    var shape2 = new THREE.Shape();
+
+    width = 8.75;
+    height = 7.75;
+
+    shape2.absarc( 0, 0, 0, -Math.PI / 2, -Math.PI, true );
+    shape2.absarc( 0, height -  radius * 2, 0, Math.PI, Math.PI / 2, true );
+    shape2.absarc( width - radius * 2, height -  radius * 2, 0, Math.PI / 2, 0, true );
+    shape2.absarc( width - radius * 2, 0, 0, 0, -Math.PI / 2, true );
+
+    var geometry2 = new THREE.ExtrudeBufferGeometry( shape2, {
+        amount: depth,
+        bevelEnabled: true,
+        bevelSegments: 5,
+        steps: 1,
+        bevelSize: radius,
+        bevelThickness: 0,
+        curveSegments: 0
+    });
+
+    geometry2.translate(1.375, 0.625, 5.25);
+    this.roundBox2 = new THREE.Mesh( geometry2, MyMaterial.BLACK) ;
+    this.add(this.roundBox2);
+
+    var gameOverTextPosition = new THREE.Vector3(1.5,0.5,5.75);
+    this.gameOverText = new MyText(gameOverTextPosition,'GAME OVER',1,this.materialText,this.fontURL);
+    this.add(this.gameOverText);
+
+    this.gameOverAnimation();
   }
 
   increaseSpeed(){
@@ -135,14 +219,18 @@ class MyGame extends THREE.Object3D {
   }
 
   dropPiece(dropType){
-    if(dropType != 'GRAVITY') this.addDropScore(dropType);
-    this.board.dropPiece();
+    if(!this.gameOver){
+      if(dropType != 'GRAVITY') this.addDropScore(dropType);
+      this.board.dropPiece();
+    }
   }
 
   hardDrop(){
-    var n = this.board.hardDrop();
-    for(var i=0; i<n; i++){
-      this.addDropScore('HARD');
+    if(!this.gameOver){
+      var n = this.board.hardDrop();
+      for(var i=0; i<n; i++){
+        this.addDropScore('HARD');
+      }
     }
   }
 
@@ -186,6 +274,15 @@ class MyGame extends THREE.Object3D {
     }
   }
 
+  checkGameOver(){
+    this.gameOver = this.board.gameOver;
+    if(this.gameOver){
+      this.stopTimeAnimation();
+      this.stopGravityAnimation();
+      this.gameOverScreen();
+    }
+  }
+
   updateScoreTextValue(){
     this.remove(this.scoreTextValue);
     this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText,this.fontURL);
@@ -214,7 +311,7 @@ class MyGame extends THREE.Object3D {
 
   update(){
     this.checkClearedRows();
-
+    if(!this.gameOver) this.checkGameOver();
     TWEEN.update();
   }
 }
