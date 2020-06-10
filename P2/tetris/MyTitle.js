@@ -27,31 +27,31 @@ class MyTitle extends THREE.Object3D {
     this.add(this.tetris);
 
     //Animaciones con TWEEN
-    var origen = { p : -0.15 } ;
-    var destino = { p : 0.15 } ;
+    var origin = { p : -0.15 } ;
+    var destiny = { p : 0.15 } ;
     var that = this;
 
-    var movimiento = new TWEEN.Tween(origen)
-      .to(destino, 1000) //1 segundo
+    var animation = new TWEEN.Tween(origin)
+      .to(destiny, 1000) //1 segundo
       .onUpdate (function(){
-          that.t1.position.y = origen.p;
-          that.t2.position.y = origen.p;
-          that.i.position.y = origen.p;
+          that.t1.position.y = origin.p;
+          that.t2.position.y = origin.p;
+          that.i.position.y = origin.p;
       })
       .repeat(Infinity)
       .yoyo(true)
       .start();
 
       //Animaciones con TWEEN
-      var origen2 = { p : 0.15 } ;
-      var destino2 = { p : -0.15 } ;
+      var origin2 = { p : 0.15 } ;
+      var destiny2 = { p : -0.15 } ;
 
-      var movimiento2 = new TWEEN.Tween(origen2)
-        .to(destino2, 1000) //1 segundo
+      var animation2 = new TWEEN.Tween(origin2)
+        .to(destiny2, 1000) //1 segundo
         .onUpdate (function(){
-            that.e.position.y = origen2.p;
-            that.r.position.y = origen2.p;
-            that.s.position.y = origen2.p;
+            that.e.position.y = origin2.p;
+            that.r.position.y = origin2.p;
+            that.s.position.y = origin2.p;
         })
         .repeat(Infinity)
         .yoyo(true)

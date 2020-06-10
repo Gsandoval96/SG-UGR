@@ -10,6 +10,8 @@ class MyBoard extends THREE.Object3D {
   constructor() {
     super();
 
+    // Board
+
     for(var i = 0; i < MyBoard.HEIGHT; i++){
       for(var j = 0; j < MyBoard.WIDTH; j++){
 
@@ -23,7 +25,7 @@ class MyBoard extends THREE.Object3D {
       }
     }
 
-    this.gameOver = false;
+    // Pieces
 
     this.piece = new MyPiece(5,MyBoard.HEIGHT-3);
     this.add(this.piece);
@@ -34,7 +36,7 @@ class MyBoard extends THREE.Object3D {
     this.savedPiece = null;
     this.justSaved = false;
 
-    // Level Manager
+    // Game Manager
 
     this.level = 1;
     this.lines = 0;
@@ -42,6 +44,9 @@ class MyBoard extends THREE.Object3D {
     this.scoreValue = [0,40,100,300,1200];
     this.goal = 5 *this.level;
     this.lineValue = [0,1,3,5,8];
+
+    this.gameOver = false;
+    this.speed = 1500; //1.5 segundos
 
     // Title
 
@@ -61,34 +66,59 @@ class MyBoard extends THREE.Object3D {
     var savedPieceText = new MyText(textPosition,'HOLD',0.5,this.materialText);
     this.add(savedPieceText);
 
-    this.textPositionLevel = new THREE.Vector3(3,-2,0.5);
-    this.levelText = new MyText(this.textPositionLevel,'LEVEL '+this.level,1,this.materialText);
+    this.levelTextPosition = new THREE.Vector3(3,-2,0.5);
+    this.levelText = new MyText(this.levelTextPosition,'LEVEL '+this.level,1,this.materialText);
     this.add(this.levelText);
 
-    this.textPositionLines = new THREE.Vector3(MyBoard.WIDTH+2,2.5,1);
-    this.linesText = new MyText(this.textPositionLines,'LINES ' + this.lines + "/" + this.goal,0.5,this.materialText);
-    this.add(this.linesText);
+    var textPositionLines = new THREE.Vector3(MyBoard.WIDTH+2,2.5,1);
+    var linesText = new MyText(textPositionLines,'LINES',0.5,this.materialText);
+    this.add(linesText);
+
+    this.linesValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+4,2.5,1);
+    this.linesValueText = new MyText(this.linesValueTextPosition, this.lines + '/' + this.goal,0.5,this.materialText);
+    this.add(this.linesValueText);
 
     var textPositionScore = new THREE.Vector3(MyBoard.WIDTH+2,1,1);
     var scoreText = new MyText(textPositionScore,'SCORE',0.5,this.materialText);
     this.add(scoreText);
 
-    this.textPositionScoreValue = new THREE.Vector3(MyBoard.WIDTH+4.5,1,1);
-    this.scoreTextValue = new MyText(this.textPositionScoreValue,this.score.toString(),0.5,this.materialText);
+    this.scoreValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+4.5,1,1);
+    this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText);
     this.add(this.scoreTextValue);
 
-    //Animaciones con TWEEN
-    var origen = { p : 0 } ;
-    var destino = { p : 1 } ;
+    //Gravity Animation
+    this.startGravityAnimation();
+  }
+
+  startGravityAnimation(){
+    var originGravity = { p : 0 } ;
+    var destinyGravity = { p : 1 } ;
     var that = this;
 
-    var movimiento = new TWEEN.Tween(origen)
-      .to(destino, 1000) //1 segundo
+    this.gravityAnimation = new TWEEN.Tween(originGravity)
+      .to(destinyGravity, that.speed)
       .onUpdate (function(){
-        if(origen.p == 1)
+        if(originGravity.p == 1)
           that.dropPiece('GRAVITY');
       })
       .repeat(Infinity)
+      .start();
+  }
+
+  stopGravityAnimation(){
+    this.gravityAnimation.stop();
+  }
+
+  levelUpAnimation(){
+    var originLevel = { p : 5 } ;
+    var destinyLevel = { p : 0.5 } ;
+    var that = this;
+
+    var animationLevel = new TWEEN.Tween(originLevel)
+      .to(destinyLevel, 2000) //2 segundos
+      .onUpdate (function(){
+          that.levelText.position.z = originLevel.p;
+      })
       .start();
   }
 
@@ -167,7 +197,7 @@ class MyBoard extends THREE.Object3D {
     return collide;
   }
 
-  collide(piece){
+  isColliding(piece){
     var collide = false;
 
     var posX = piece.pos.x;
@@ -203,7 +233,7 @@ class MyBoard extends THREE.Object3D {
     var inBounds = this.pieceInBounds(newPiece);
 
     if(inBounds){
-      var collision = this.collide(newPiece);
+      var collision = this.isColliding(newPiece);
       if(!collision)
         this.piece.move(newPiece.pos);
     }
@@ -218,7 +248,7 @@ class MyBoard extends THREE.Object3D {
     newPiece.copy(this.piece);
     newPiece.pos = newPos;
 
-    var collision = this.bottomCollider(newPiece) || this.collide(newPiece);
+    var collision = this.bottomCollider(newPiece) || this.isColliding(newPiece);
 
     if(collision){
       this.pinUp(this.piece);
@@ -253,7 +283,7 @@ class MyBoard extends THREE.Object3D {
       var inBounds = this.pieceInBounds(newPiece);
 
       if(inBounds){
-        var collision = this.collide(newPiece);
+        var collision = this.isColliding(newPiece);
         if(!collision)
           this.piece.rotate(newPerifs);
       }
@@ -275,6 +305,7 @@ class MyBoard extends THREE.Object3D {
       pos = posPerif.y * (MyBoard.WIDTH) + posPerif.x;
       this.children[pos].box.material = material;
     }
+    
     this.checkRow();
     this.respawn();
 
@@ -314,39 +345,30 @@ class MyBoard extends THREE.Object3D {
     }
   }
 
+  increaseSpeed(){
+    this.stopGravityAnimation();
+    this.speed = this.speed * Math.pow(0.85,this.level-1);
+    this.startGravityAnimation();
+  }
+
   addLineScore(n){
     this.lines += this.lineValue[n];
     this.score += this.level * this.scoreValue[n];
 
     if(this.lines >= this.goal){
-      this.level++;
+      this.levelUp();
       this.lines %= this.goal;
       this.goal = 5 * this.level;
-
-      this.remove(this.levelText);
-      this.levelText = new MyText(this.textPositionLevel,'LEVEL '+this.level,1,this.materialText);
-      this.add(this.levelText);
-
-      //Animaciones con TWEEN
-      var origen = { p : 5 } ;
-      var destino = { p : 0.5 } ;
-      var that = this;
-
-      var movimiento = new TWEEN.Tween(origen)
-        .to(destino, 2000) //2 segundos
-        .onUpdate (function(){
-            that.levelText.position.z = origen.p;
-        })
-        .start();
     }
 
-    this.remove(this.linesText);
-    this.linesText = new MyText(this.textPositionLines,'Lines ' + this.lines + "/" + this.goal,0.5,this.materialText);
-    this.add(this.linesText);
+    this.updateLinesValueText();
+    this.updateScoreTextValue();
+  }
 
-    this.remove(this.scoreTextValue);
-    this.scoreTextValue = new MyText(this.textPositionScoreValue,this.score.toString(),0.5,this.materialText);
-    this.add(this.scoreTextValue);
+  levelUp(){
+    this.level++;
+    this.updateLevelText();
+    this.increaseSpeed();
   }
 
   addDropScore(type){
@@ -358,9 +380,27 @@ class MyBoard extends THREE.Object3D {
         this.score += 2;
       break;
     }
+    this.updateScoreTextValue();
+  }
+
+  updateScoreTextValue(){
     this.remove(this.scoreTextValue);
-    this.scoreTextValue = new MyText(this.textPositionScoreValue,this.score.toString(),0.5,this.materialText);
+    this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText);
     this.add(this.scoreTextValue);
+  }
+
+  updateLinesValueText(){
+    this.remove(this.linesValueText);
+    this.linesValueText = new MyText(this.linesValueTextPosition, this.lines + '/' + this.goal,0.5,this.materialText);
+    this.add(this.linesValueText);
+  }
+
+  updateLevelText(){
+    this.remove(this.levelText);
+    this.levelText = new MyText(this.levelTextPosition,'LEVEL '+this.level,1,this.materialText);
+    this.add(this.levelText);
+
+    this.levelUpAnimation();
   }
 
   clearRows(rows){
@@ -402,7 +442,7 @@ class MyBoard extends THREE.Object3D {
       this.nextPiece = new MyPiece(MyBoard.WIDTH+2,MyBoard.HEIGHT-3);
       this.add(this.nextPiece);
 
-      if(this.collide(this.piece)){
+      if(this.isColliding(this.piece)){
         this.gameOver = true;
         console.log("GAME OVER");
       }
@@ -411,7 +451,6 @@ class MyBoard extends THREE.Object3D {
 
   update () {
     TWEEN.update();
-
     this.title.update();
   }
 
