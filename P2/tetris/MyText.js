@@ -1,12 +1,12 @@
 class MyText extends THREE.Object3D {
-  constructor(pos, text, size, mat) {
+  constructor(pos, text, size, mat, fontURL) {
     super();
 
     var that = this;
 
     var loader = new THREE.FontLoader();
 
-    loader.load('../fonts/helvetiker_regular.typeface.json', function ( font ) {
+    loader.load(fontURL, function ( font ) {
 
     	var geometry = new THREE.TextGeometry( text, {
     		font: font,

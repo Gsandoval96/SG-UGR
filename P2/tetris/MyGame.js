@@ -36,41 +36,42 @@ class MyGame extends THREE.Object3D {
     // TextGeometry
 
     this.materialText = MyMaterial.WHITE;
+    this.fontURL = '../fonts/helvetiker_regular.typeface.json';
 
     var textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5.5,1);
-    var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5,this.materialText);
+    var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5,this.materialText,this.fontURL);
     this.add(nextPieceText);
 
     textPosition = new THREE.Vector3(MyBoard.WIDTH+2,7.5,1);
-    var savedPieceText = new MyText(textPosition,'HOLD',0.5,this.materialText);
+    var savedPieceText = new MyText(textPosition,'HOLD',0.5,this.materialText,this.fontURL);
     this.add(savedPieceText);
 
     this.levelTextPosition = new THREE.Vector3(3,-2,0.5);
-    this.levelText = new MyText(this.levelTextPosition,'LEVEL '+this.level,1,this.materialText);
+    this.levelText = new MyText(this.levelTextPosition,'LEVEL '+this.level,1,this.materialText,this.fontURL);
     this.add(this.levelText);
 
     var textPositionLines = new THREE.Vector3(MyBoard.WIDTH+2,2.5,1);
-    var linesText = new MyText(textPositionLines,'LINES',0.5,this.materialText);
+    var linesText = new MyText(textPositionLines,'LINES',0.5,this.materialText,this.fontURL);
     this.add(linesText);
 
     this.linesValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+4,2.5,1);
-    this.linesValueText = new MyText(this.linesValueTextPosition, this.lines + '/' + this.goal,0.5,this.materialText);
+    this.linesValueText = new MyText(this.linesValueTextPosition, this.lines + '/' + this.goal,0.5,this.materialText,this.fontURL);
     this.add(this.linesValueText);
 
     var textPositionScore = new THREE.Vector3(MyBoard.WIDTH+2,1,1);
-    var scoreText = new MyText(textPositionScore,'SCORE',0.5,this.materialText);
+    var scoreText = new MyText(textPositionScore,'SCORE',0.5,this.materialText,this.fontURL);
     this.add(scoreText);
 
     this.scoreValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+4.5,1,1);
-    this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText);
+    this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText,this.fontURL);
     this.add(this.scoreTextValue);
 
     var timeTextPosition = new THREE.Vector3(MyBoard.WIDTH+2,4,1);
-    var timeText = new MyText(timeTextPosition,'TIME ',0.5,this.materialText);
+    var timeText = new MyText(timeTextPosition,'TIME ',0.5,this.materialText,this.fontURL);
     this.add(timeText);
 
     this.timeValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+3.75,4,1);
-    this.timeValueText = new MyText(this.timeValueTextPosition,this.time.toString(),0.5,this.materialText);
+    this.timeValueText = new MyText(this.timeValueTextPosition,this.time.toString(),0.5,this.materialText,this.fontURL);
     this.add(this.timeValueText);
 
     //Animation
@@ -187,19 +188,19 @@ class MyGame extends THREE.Object3D {
 
   updateScoreTextValue(){
     this.remove(this.scoreTextValue);
-    this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText);
+    this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText,this.fontURL);
     this.add(this.scoreTextValue);
   }
 
   updateLinesValueText(){
     this.remove(this.linesValueText);
-    this.linesValueText = new MyText(this.linesValueTextPosition, this.lines + '/' + this.goal,0.5,this.materialText);
+    this.linesValueText = new MyText(this.linesValueTextPosition, this.lines + '/' + this.goal,0.5,this.materialText,this.fontURL);
     this.add(this.linesValueText);
   }
 
   updateLevelText(){
     this.remove(this.levelText);
-    this.levelText = new MyText(this.levelTextPosition,'LEVEL '+this.level,1,this.materialText);
+    this.levelText = new MyText(this.levelTextPosition,'LEVEL '+this.level,1,this.materialText, this.fontURL);
     this.add(this.levelText);
 
     this.levelUpAnimation();
@@ -207,7 +208,7 @@ class MyGame extends THREE.Object3D {
 
   updateTimeText(){
     this.remove(this.timeValueText);
-    this.timeValueText = new MyText(this.timeValueTextPosition,this.time.toString(),0.5,this.materialText);
+    this.timeValueText = new MyText(this.timeValueTextPosition,this.time.toString(),0.5,this.materialText, this.fontURL);
     this.add(this.timeValueText);
   }
 
