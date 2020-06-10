@@ -411,6 +411,8 @@ class MyBoard extends THREE.Object3D {
 
   update () {
     TWEEN.update();
+
+    this.title.update();
   }
 
 }
