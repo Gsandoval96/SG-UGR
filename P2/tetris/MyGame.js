@@ -50,24 +50,24 @@ class MyGame extends THREE.Object3D {
     this.add(this.levelText);
 
     var textPositionLines = new THREE.Vector3(MyBoard.WIDTH+2,2.5,1);
-    var linesText = new MyText(textPositionLines,'LINES',0.5,this.materialText,this.fontURL);
-    this.add(linesText);
+    this.linesText = new MyText(textPositionLines,'LINES',0.5,this.materialText,this.fontURL);
+    this.add(this.linesText);
 
     this.linesValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+4,2.5,1);
     this.linesValueText = new MyText(this.linesValueTextPosition, this.lines + '/' + this.goal,0.5,this.materialText,this.fontURL);
     this.add(this.linesValueText);
 
-    var textPositionScore = new THREE.Vector3(MyBoard.WIDTH+2,1,1);
-    var scoreText = new MyText(textPositionScore,'SCORE',0.5,this.materialText,this.fontURL);
-    this.add(scoreText);
+    this.scoreTextPosition = new THREE.Vector3(MyBoard.WIDTH+2,1,1);
+    this.scoreText = new MyText(this.scoreTextPosition,'SCORE',0.5,this.materialText,this.fontURL);
+    this.add(this.scoreText);
 
     this.scoreValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+4.5,1,1);
     this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText,this.fontURL);
     this.add(this.scoreTextValue);
 
     var timeTextPosition = new THREE.Vector3(MyBoard.WIDTH+2,4,1);
-    var timeText = new MyText(timeTextPosition,'TIME ',0.5,this.materialText,this.fontURL);
-    this.add(timeText);
+    this.timeText = new MyText(timeTextPosition,'TIME ',0.5,this.materialText,this.fontURL);
+    this.add(this.timeText);
 
     this.timeValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+3.75,4,1);
     this.timeValueText = new MyText(this.timeValueTextPosition,this.time.toString(),0.5,this.materialText,this.fontURL);
@@ -134,18 +134,87 @@ class MyGame extends THREE.Object3D {
 
   gameOverAnimation(){
 
-    var origin = { p : 25} ;
-    var destiny = { p : 12 } ;
+    var gameOverOrigin = { p : 25} ;
+    var gameOverDestiny = { p : 12 } ;
     var that = this;
 
-    var levelUpAnimation = new TWEEN.Tween(origin)
-      .to(destiny, 4000) //4 segundos
+    var gameOverAnimation = new TWEEN.Tween(gameOverOrigin)
+      .to(gameOverDestiny, 1000) //4 segundos
       .onUpdate (function(){
-          that.gameOverText.position.y = origin.p;
-          that.roundBox.position.y = origin.p-6;
-          that.roundBox2.position.y = origin.p-6;
+          that.gameOverText.position.y = gameOverOrigin.p;
+          that.roundWhite.position.y = gameOverOrigin.p-6;
+          that.roundBlack.position.y = gameOverOrigin.p-6;
       })
       .start();
+
+    var originTime = { p : -30} ;
+    var originLine = { p : -30} ;
+    var originScore = { p : -30} ;
+    var destiny = { p : -8.5 } ;
+    var posY = 6.5;
+    var posZ = 5;
+
+    var finalTimeAnimation = new TWEEN.Tween(originTime)
+      .to(destiny, 1000) //1 segundos
+      .onStart (function(){
+        that.timeText.position.y = posY;
+        that.timeValueText.position.y = posY;
+
+        that.timeText.position.z = posZ;
+        that.timeValueText.position.z = posZ;
+      })
+      .onUpdate (function(){
+        that.timeText.position.x = originTime.p;
+        that.timeValueText.position.x = originTime.p;
+      });
+
+      var finalLinesAnimation = new TWEEN.Tween(originLine)
+        .to(destiny, 1000) //4 segundos
+        .onStart (function(){
+          var otherLines = 0;
+          for(var i=that.level-1; i>0; i--)
+            otherLines += i*5;
+          var totalLines = that.lines + otherLines;
+
+          that.remove(that.linesValueText);
+          that.linesValueText = new MyText(that.linesValueTextPosition, totalLines.toString(),0.5,that.materialText,that.fontURL);
+          that.add(that.linesValueText);
+
+          that.linesText.position.y = posY;
+          that.linesValueText.position.y = posY;
+
+          that.linesText.position.z = posZ;
+          that.linesValueText.position.z = posZ;
+        })
+        .onUpdate (function(){
+          that.linesText.position.x = originLine.p;
+          that.linesValueText.position.x = originLine.p;
+        });
+
+      var finalScoreAnimation = new TWEEN.Tween(originScore)
+        .to(destiny, 1000) //1 segundos
+        .onStart (function(){
+          that.remove(that.scoreText);
+          that.scoreText = new MyText(that.scoreTextPosition, 'FINAL SCORE'.toString(),0.5,that.materialText,that.fontURL);
+          that.add(that.scoreText);
+
+          that.score += that.time * that.level;
+          that.updateScoreTextValue();
+
+          that.scoreText.position.y = posY;
+          that.scoreTextValue.position.y = posY-1;
+
+          that.scoreText.position.z = posZ;
+          that.scoreTextValue.position.z = posZ;
+        })
+        .onUpdate (function(){
+          that.scoreText.position.x = originScore.p-1;
+          that.scoreTextValue.position.x = originScore.p-2;
+        });
+
+    gameOverAnimation.chain(finalTimeAnimation);
+    finalTimeAnimation.chain(finalLinesAnimation);
+    finalLinesAnimation.chain(finalScoreAnimation);
   }
 
   gameOverScreen(){
@@ -159,51 +228,15 @@ class MyGame extends THREE.Object3D {
     var height = 8;
     var depth = 0.5;
     var radius = 0.25;
-
-    var shape = new THREE.Shape();
-
-    shape.absarc( 0, 0, 0, -Math.PI / 2, -Math.PI, true );
-    shape.absarc( 0, height -  radius * 2, 0, Math.PI, Math.PI / 2, true );
-    shape.absarc( width - radius * 2, height -  radius * 2, 0, Math.PI / 2, 0, true );
-    shape.absarc( width - radius * 2, 0, 0, 0, -Math.PI / 2, true );
-
-    var geometry = new THREE.ExtrudeBufferGeometry( shape, {
-        amount: depth,
-        bevelEnabled: true,
-        bevelSegments: 5,
-        steps: 1,
-        bevelSize: radius,
-        bevelThickness: 0,
-        curveSegments: 0
-    });
-
-    geometry.translate(1.25, 0.5, 5);
-    this.roundBox = new THREE.Mesh( geometry, MyMaterial.WHITE) ;
-    this.add(this.roundBox);
-
-    var shape2 = new THREE.Shape();
+    var position = new THREE.Vector3(1.25, 0.5, 5);
+    this.roundWhite = new MyRoundShape(position, width, height, depth, radius, MyMaterial.WHITE);
+    this.add(this.roundWhite);
 
     width = 8.75;
     height = 7.75;
-
-    shape2.absarc( 0, 0, 0, -Math.PI / 2, -Math.PI, true );
-    shape2.absarc( 0, height -  radius * 2, 0, Math.PI, Math.PI / 2, true );
-    shape2.absarc( width - radius * 2, height -  radius * 2, 0, Math.PI / 2, 0, true );
-    shape2.absarc( width - radius * 2, 0, 0, 0, -Math.PI / 2, true );
-
-    var geometry2 = new THREE.ExtrudeBufferGeometry( shape2, {
-        amount: depth,
-        bevelEnabled: true,
-        bevelSegments: 5,
-        steps: 1,
-        bevelSize: radius,
-        bevelThickness: 0,
-        curveSegments: 0
-    });
-
-    geometry2.translate(1.375, 0.625, 5.25);
-    this.roundBox2 = new THREE.Mesh( geometry2, MyMaterial.BLACK) ;
-    this.add(this.roundBox2);
+    position = new THREE.Vector3(1.375, 0.625, 5.25);
+    this.roundBlack = new MyRoundShape(position, width, height, depth, radius,  MyMaterial.BLACK);
+    this.add(this.roundBlack);
 
     var gameOverTextPosition = new THREE.Vector3(1.5,0.5,5.75);
     this.gameOverText = new MyText(gameOverTextPosition,'GAME OVER',1,this.materialText,this.fontURL);
