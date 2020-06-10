@@ -16,6 +16,8 @@ class MyScene extends THREE.Scene {
     this.game = new MyGame();
     this.add (this.game);
 
+    this.controls = new MyControls();
+
     // Creamos y gestionamos el audio que sonará de fondo
     this.listener = new THREE.AudioListener();
     var sound = new THREE.Audio( this.listener );
@@ -167,15 +169,17 @@ class MyScene extends THREE.Scene {
     if (key == 51 ){this.changeCamera(3);}
     if (key == 52 ){this.changeCamera(4);}
 
-    if (key == 81 ){this.game.board.rotatePiece('L');} //Q
-    if (key == 69 ){this.game.board.rotatePiece('R');} //E
+    this.controls.manager(key, this.game);
 
-    if (key == 32 ){this.game.board.hardDrop();} //Espacio
-    if (key == 67 ){this.game.board.savePiece();} //C
-
-    if (key == 37 ){this.game.board.movePiece(-1);} //Flecha Izquierda
-    if (key == 39 ){this.game.board.movePiece(1);} //Flecha Derecha
-    if (key == 40 ){this.game.board.dropPiece('SOFT');} //Flecha Abajo
+    // if (key == 81 ){this.game.board.rotatePiece('L');} //Q
+    // if (key == 69 ){this.game.board.rotatePiece('R');} //E
+    //
+    // if (key == 32 ){this.game.board.hardDrop();} //Espacio
+    // if (key == 67 ){this.game.board.savePiece();} //C
+    //
+    // if (key == 37 ){this.game.board.movePiece(-1);} //Flecha Izquierda
+    // if (key == 39 ){this.game.board.movePiece(1);} //Flecha Derecha
+    // if (key == 40 ){this.game.board.dropPiece('SOFT');} //Flecha Abajo
 
     // if (key == 65 ){this.game.board.movePiece(-1);} //A
     // if (key == 68 ){this.game.board.movePiece(1);} //D

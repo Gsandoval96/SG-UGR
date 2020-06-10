@@ -87,7 +87,7 @@ class MyGame extends THREE.Object3D {
       .to(destinyGravity, that.speed)
       .onUpdate (function(){
         if(originGravity.p == 1)
-          that.board.dropPiece('GRAVITY');
+          that.dropPiece('GRAVITY');
       })
       .repeat(Infinity)
       .start();
@@ -133,6 +133,18 @@ class MyGame extends THREE.Object3D {
     this.startGravityAnimation();
   }
 
+  dropPiece(dropType){
+    if(dropType != 'GRAVITY') this.addDropScore(dropType);
+    this.board.dropPiece();
+  }
+
+  hardDrop(){
+    var n = this.board.hardDrop();
+    for(var i=0; i<n; i++){
+      this.addDropScore('HARD');
+    }
+  }
+
   addLineScore(n){
     this.lines += this.lineValue[n];
     this.score += this.level * this.scoreValue[n];
@@ -165,6 +177,14 @@ class MyGame extends THREE.Object3D {
     this.updateScoreTextValue();
   }
 
+  checkClearedRows(){
+    var clearedRows = this.board.clearedRows;
+    if(clearedRows != 0){
+      this.addLineScore(clearedRows);
+      this.board.clearedRows = 0;
+    }
+  }
+
   updateScoreTextValue(){
     this.remove(this.scoreTextValue);
     this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText);
@@ -192,6 +212,8 @@ class MyGame extends THREE.Object3D {
   }
 
   update(){
-    this.board.update();
+    this.checkClearedRows();
+
+    TWEEN.update();
   }
 }

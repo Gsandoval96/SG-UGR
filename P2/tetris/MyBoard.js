@@ -28,6 +28,10 @@ class MyBoard extends THREE.Object3D {
     // GAME OVER
     this.gameOver = false;
 
+    // Row
+
+    this.clearedRows = 0;
+
     // Pieces
 
     this.piece = new MyPiece(5,MyBoard.HEIGHT-3);
@@ -157,8 +161,7 @@ class MyBoard extends THREE.Object3D {
     }
   }
 
-  dropPiece(dropType){
-    if(dropType != 'GRAVITY') this.addDropScore(dropType);
+  dropPiece(){
 
     var newPos = new THREE.Vector3(this.piece.pos.x, this.piece.pos.y-1, 0);
 
@@ -232,9 +235,14 @@ class MyBoard extends THREE.Object3D {
 
   hardDrop(){
     var collide = true;
+    var n = 0;
+
     do{
-      collide = this.dropPiece('HARD');
+      collide = this.dropPiece();
+      n++;
     }while(!collide);
+
+    return n;
   }
 
   checkRow(){
@@ -258,7 +266,7 @@ class MyBoard extends THREE.Object3D {
       }
     }
     if(rows.length != 0){
-      this.addLineScore(rows.length);
+      this.clearedRows = rows.length;
       this.clearRows(rows);
     }
   }
@@ -307,10 +315,6 @@ class MyBoard extends THREE.Object3D {
         console.log("GAME OVER");
       }
     }
-  }
-
-  update () {
-    TWEEN.update();
   }
 
 }
