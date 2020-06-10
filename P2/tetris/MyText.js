@@ -18,12 +18,12 @@ class MyText extends THREE.Object3D {
     		bevelSize: size/20,
     		bevelOffset: 0,
     		bevelSegments: 2
-    	} );
+    	});
 
       var mesh = new THREE.Mesh(geometry, mat);
       mesh.position.set(pos.x, pos.y, pos.z);
 
       that.add(mesh);
-    } );
+    });
   }
 }

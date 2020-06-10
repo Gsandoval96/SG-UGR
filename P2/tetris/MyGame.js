@@ -150,7 +150,7 @@ class MyGame extends THREE.Object3D {
     var originTime = { p : -30} ;
     var originLine = { p : -30} ;
     var originScore = { p : -30} ;
-    var destiny = { p : -8.5 } ;
+    var destiny = { p : -8.75 } ;
     var posY = 6.5;
     var posZ = 5;
 
@@ -208,7 +208,7 @@ class MyGame extends THREE.Object3D {
           that.scoreTextValue.position.z = posZ;
         })
         .onUpdate (function(){
-          that.scoreText.position.x = originScore.p-1;
+          that.scoreText.position.x = originScore.p-0.75;
           that.scoreTextValue.position.x = originScore.p-2;
         });
 
@@ -218,12 +218,6 @@ class MyGame extends THREE.Object3D {
   }
 
   gameOverScreen(){
-    console.log('GAME OVER');
-    console.log("LINES "+this.lines);
-    console.log("TIME "+this.time);
-    console.log("LEVEL "+this.level);
-    console.log("SCORE "+this.score);
-
     var width = 9;
     var height = 8;
     var depth = 0.5;

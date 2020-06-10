@@ -28,7 +28,7 @@ class MyScene extends THREE.Scene {
       sound.setBuffer( buffer );
       sound.setLoop( true );
       sound.setVolume( 0.1 );
-      //sound.play();
+      sound.play();
     });
 
   }
@@ -55,7 +55,7 @@ class MyScene extends THREE.Scene {
     this.add (this.frontCam);
 
     this.sideCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.sideCam.position.set (15, 10.5, 35);
+    this.sideCam.position.set (20, 10.5, 35);
     var lookSide = new THREE.Vector3 (5, 10.5, 0);
     this.sideCam.lookAt(lookSide);
 
@@ -165,28 +165,11 @@ class MyScene extends THREE.Scene {
     //console.log(key);
 
     if (key == 49 ){this.changeCamera(1);}
-    if (key == 50 ){this.changeCamera(2);}
-    if (key == 51 ){this.changeCamera(3);}
-    if (key == 52 ){this.changeCamera(4);}
+    else if (key == 50 ){this.changeCamera(2);}
+    else if (key == 51 ){this.changeCamera(3);}
+    else if (key == 52 ){this.changeCamera(4);}
 
-    this.controls.manager(key, this.game);
-
-    // if (key == 81 ){this.game.board.rotatePiece('L');} //Q
-    // if (key == 69 ){this.game.board.rotatePiece('R');} //E
-    //
-    // if (key == 32 ){this.game.board.hardDrop();} //Espacio
-    // if (key == 67 ){this.game.board.savePiece();} //C
-    //
-    // if (key == 37 ){this.game.board.movePiece(-1);} //Flecha Izquierda
-    // if (key == 39 ){this.game.board.movePiece(1);} //Flecha Derecha
-    // if (key == 40 ){this.game.board.dropPiece('SOFT');} //Flecha Abajo
-
-    // if (key == 65 ){this.game.board.movePiece(-1);} //A
-    // if (key == 68 ){this.game.board.movePiece(1);} //D
-    // if (key == 83 ){this.game.board.dropPiece('SOFT');} //S
-    //
-    // if (key == 87 ){this.game.board.hardDrop();} //W
-
+    else {this.controls.manager(key, this.game);}
   }
 
   update () {

@@ -1,4 +1,5 @@
 class MyControls{
+
   constructor(){
     this.rotateLeftKey = 81; //Q
     this.rotateRightKey = 69; //E
