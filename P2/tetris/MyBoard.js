@@ -38,6 +38,8 @@ class MyBoard extends THREE.Object3D {
 
     // Game Manager
 
+    this.time = 0;
+
     this.level = 1;
     this.lines = 0;
     this.score = 0;
@@ -46,7 +48,8 @@ class MyBoard extends THREE.Object3D {
     this.lineValue = [0,1,3,5,8];
 
     this.gameOver = false;
-    this.speed = 1500; //1.5 segundos
+    this.speed = 2000; //2 segundos
+    this.speedUp = 0.8; //20% más rápido/nivel
 
     // Title
 
@@ -86,8 +89,17 @@ class MyBoard extends THREE.Object3D {
     this.scoreTextValue = new MyText(this.scoreValueTextPosition,this.score.toString(),0.5,this.materialText);
     this.add(this.scoreTextValue);
 
-    //Gravity Animation
+    var timeTextPosition = new THREE.Vector3(MyBoard.WIDTH+2,4,1);
+    var timeText = new MyText(timeTextPosition,'TIME ',0.5,this.materialText);
+    this.add(timeText);
+
+    this.timeValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+3.75,4,1);
+    this.timeValueText = new MyText(this.timeValueTextPosition,this.time.toString(),0.5,this.materialText);
+    this.add(this.timeValueText);
+
+    //Animation
     this.startGravityAnimation();
+    this.timeAnimation();
   }
 
   startGravityAnimation(){
@@ -119,6 +131,23 @@ class MyBoard extends THREE.Object3D {
       .onUpdate (function(){
           that.levelText.position.z = originLevel.p;
       })
+      .start();
+  }
+
+  timeAnimation(){
+    var originTime = { p : 0 } ;
+    var destinyTime = { p : 1 } ;
+    var that = this;
+
+    var animationTime = new TWEEN.Tween(originTime)
+      .to(destinyTime, 1000) //1 segundos
+      .onUpdate (function(){
+          if(originTime.p == 1){
+            that.time++;
+            that.updateTimeText();
+          }
+      })
+      .repeat(Infinity)
       .start();
   }
 
@@ -305,7 +334,7 @@ class MyBoard extends THREE.Object3D {
       pos = posPerif.y * (MyBoard.WIDTH) + posPerif.x;
       this.children[pos].box.material = material;
     }
-    
+
     this.checkRow();
     this.respawn();
 
@@ -347,7 +376,7 @@ class MyBoard extends THREE.Object3D {
 
   increaseSpeed(){
     this.stopGravityAnimation();
-    this.speed = this.speed * Math.pow(0.85,this.level-1);
+    this.speed = this.speed * Math.pow(this.speedUp,this.level-1);
     this.startGravityAnimation();
   }
 
@@ -401,6 +430,12 @@ class MyBoard extends THREE.Object3D {
     this.add(this.levelText);
 
     this.levelUpAnimation();
+  }
+
+  updateTimeText(){
+    this.remove(this.timeValueText);
+    this.timeValueText = new MyText(this.timeValueTextPosition,this.time.toString(),0.5,this.materialText);
+    this.add(this.timeValueText);
   }
 
   clearRows(rows){
