@@ -13,8 +13,8 @@ class MyScene extends THREE.Scene {
     this.camera = 1;
 
     // Creamos el tablero y lo añadimos a la escena
-    this.board = new MyBoard();
-    this.add (this.board);
+    this.game = new MyGame();
+    this.add (this.game);
 
     // Creamos y gestionamos el audio que sonará de fondo
     this.listener = new THREE.AudioListener();
@@ -167,21 +167,21 @@ class MyScene extends THREE.Scene {
     if (key == 51 ){this.changeCamera(3);}
     if (key == 52 ){this.changeCamera(4);}
 
-    if (key == 81 ){this.board.rotatePiece('L');} //Q
-    if (key == 69 ){this.board.rotatePiece('R');} //E
+    if (key == 81 ){this.game.board.rotatePiece('L');} //Q
+    if (key == 69 ){this.game.board.rotatePiece('R');} //E
 
-    if (key == 32 ){this.board.hardDrop();} //Espacio
-    if (key == 67 ){this.board.savePiece();} //C
+    if (key == 32 ){this.game.board.hardDrop();} //Espacio
+    if (key == 67 ){this.game.board.savePiece();} //C
 
-    if (key == 37 ){this.board.movePiece(-1);} //Flecha Izquierda
-    if (key == 39 ){this.board.movePiece(1);} //Flecha Derecha
-    if (key == 40 ){this.board.dropPiece('SOFT');} //Flecha Abajo
+    if (key == 37 ){this.game.board.movePiece(-1);} //Flecha Izquierda
+    if (key == 39 ){this.game.board.movePiece(1);} //Flecha Derecha
+    if (key == 40 ){this.game.board.dropPiece('SOFT');} //Flecha Abajo
 
-    // if (key == 65 ){this.board.movePiece(-1);} //A
-    // if (key == 68 ){this.board.movePiece(1);} //D
-    // if (key == 83 ){this.board.dropPiece('SOFT');} //S
+    // if (key == 65 ){this.game.board.movePiece(-1);} //A
+    // if (key == 68 ){this.game.board.movePiece(1);} //D
+    // if (key == 83 ){this.game.board.dropPiece('SOFT');} //S
     //
-    // if (key == 87 ){this.board.hardDrop();} //W
+    // if (key == 87 ){this.game.board.hardDrop();} //W
 
   }
 
@@ -195,7 +195,7 @@ class MyScene extends THREE.Scene {
     // Se actualiza la posición de la cámara según su controlador
     this.cameraControl.update();
 
-    this.board.update();
+    this.game.update();
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
