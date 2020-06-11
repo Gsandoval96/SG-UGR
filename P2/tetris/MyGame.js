@@ -29,7 +29,7 @@ class MyGame extends THREE.Object3D {
     this.lineValue = [0,1,3,5,8];
 
     // Gravity parameters
-    this.speed = 1500; //1.5 segundos
+    this.speed = 2000; //2 segundos
     this.speedUp = 0.75; //25% más rápido/nivel
 
     // Controles
@@ -383,8 +383,10 @@ class MyGame extends THREE.Object3D {
   }
 
   update(){
+    if(!this.gameOver){
       if(this.board.clearedRows != 0) this.checkClearedRows();
-      if(this.board.gameOver && !this.gameOver) this.launchGameOver();
+      if(this.board.gameOver) this.launchGameOver();
       TWEEN.update();
+    }
   }
 }
