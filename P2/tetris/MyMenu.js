@@ -36,7 +36,7 @@ class MyMenu extends THREE.Object3D {
           var random = (i%2)-1;
           if(random == 0) random = 1;
           var posX = that.random(19,0) * random;
-          var posZ = that.random(20,0) *random;
+          var posZ = -that.random(35,10);
           that.pieces[i].position.x = posX;
           that.pieces[i].position.z = posZ;
         }
@@ -49,7 +49,7 @@ class MyMenu extends THREE.Object3D {
             var random = (i%2)-1;
             if(random == 0) random = 1;
             var posX = that.random(19,0) * random;
-            var posZ = that.random(20,0) *random;
+            var posZ = -that.random(35,10);
 
             console.log(posX);
             that.pieces[i] = new MyPiece(posX,0);

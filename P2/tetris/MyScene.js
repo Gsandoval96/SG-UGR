@@ -214,6 +214,7 @@ class MyScene extends THREE.Scene {
       this.remove(this.menu);
       this.game.startGame();
       this.add(this.game);
+      this.menu.gravityAnimation.stop();
     }
   }
 
