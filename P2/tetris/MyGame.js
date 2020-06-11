@@ -11,12 +11,28 @@ class MyGame extends THREE.Object3D {
 
     // Title
 
-    var titlePos = new THREE.Vector3(0, MyBoard.HEIGHT+1.5, 0.5);
-    this.title = new MyTitle(titlePos,2);
+    var titlePos = new THREE.Vector3(-0.5, MyBoard.HEIGHT+1.5, 0.5);
+    this.title = new MyTitle(titlePos,2,false);
     this.add(this.title);
 
-    // Controles
+    // Game Manager
 
+    this.gameOver = false;
+
+    this.time = 0;
+
+    this.level = 1;
+    this.lines = 0;
+    this.score = 0;
+    this.scoreValue = [0,40,100,300,1200];
+    this.goal = 5 *this.level;
+    this.lineValue = [0,1,3,5,8];
+
+    // Gravity parameters
+    this.speed = 1500; //1.5 segundos
+    this.speedUp = 0.75; //25% más rápido/nivel
+
+    // Controles
 
     this.materialText = MyMaterial.WHITE;
     this.fontURL = '../fonts/helvetiker_regular.typeface.json';
@@ -60,7 +76,7 @@ class MyGame extends THREE.Object3D {
 
     pos = new THREE.Vector3(-4.25,9.5,1);
     adjust = new THREE.Vector3(0.5,0.4,1);
-    this.keyH = new MyKeyObj(pos,4,4,'H', adjust);
+    this.keyH = new MyKeyObj(pos,4,4,'W', adjust);
     this.add(this.keyH);
 
     textPosition = new THREE.Vector3(-10,9.5,1);
@@ -76,32 +92,7 @@ class MyGame extends THREE.Object3D {
     var dropPieceText = new MyText(textPosition,'DROP',0.5,this.materialText,this.fontURL);
     this.add(dropPieceText);
 
-    // Game Manager
-
-    this.gameOver = false;
-
-    this.time = 0;
-
-    this.level = 1;
-    this.lines = 0;
-    this.score = 0;
-    this.scoreValue = [0,40,100,300,1200];
-    this.goal = 5 *this.level;
-    this.lineValue = [0,1,3,5,8];
-
-    // Gravity parameters
-    this.speed = 2000; //2 segundos
-    this.speedUp = 0.75; //25% más rápido/nivel
-
     // TextGeometry
-
-    textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5.5,1);
-    var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5,this.materialText,this.fontURL);
-    this.add(nextPieceText);
-
-    textPosition = new THREE.Vector3(MyBoard.WIDTH+2,7.5,1);
-    var savedPieceText = new MyText(textPosition,'HOLD',0.5,this.materialText,this.fontURL);
-    this.add(savedPieceText);
 
     this.levelTextPosition = new THREE.Vector3(3,-2,0.5);
     this.levelText = new MyText(this.levelTextPosition,'LEVEL '+this.level,1,this.materialText,this.fontURL);
@@ -352,20 +343,15 @@ class MyGame extends THREE.Object3D {
   }
 
   checkClearedRows(){
-    var clearedRows = this.board.clearedRows;
-    if(clearedRows != 0){
-      this.addLineScore(clearedRows);
+      this.addLineScore(this.board.clearedRows);
       this.board.clearedRows = 0;
-    }
   }
 
-  checkGameOver(){
+  launchGameOver(){
     this.gameOver = this.board.gameOver;
-    if(this.gameOver){
-      this.stopTimeAnimation();
-      this.stopGravityAnimation();
-      this.gameOverScreen();
-    }
+    this.stopTimeAnimation();
+    this.stopGravityAnimation();
+    this.gameOverScreen();
   }
 
   updateScoreTextValue(){
@@ -395,8 +381,8 @@ class MyGame extends THREE.Object3D {
   }
 
   update(){
-    this.checkClearedRows();
-    if(!this.gameOver) this.checkGameOver();
+    if(this.board.clearedRows != 0) this.checkClearedRows();
+    if(this.board.gameOver && !this.gameOver) this.launchGameOver();
     TWEEN.update();
   }
 }

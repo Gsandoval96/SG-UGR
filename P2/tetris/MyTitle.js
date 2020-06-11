@@ -1,5 +1,5 @@
 class MyTitle extends THREE.Object3D {
-  constructor(pos, size) {
+  constructor(pos, size, animated) {
     super();
 
     var posT1 = new THREE.Vector3(pos.x, pos.y, pos.z);
@@ -29,35 +29,37 @@ class MyTitle extends THREE.Object3D {
     this.add(this.tetris);
 
     //Animaciones con TWEEN
-    var origin = { p : -size/10 } ;
-    var destiny = { p : size/10 } ;
-    var that = this;
+    if(animated){
+      var origin = { p : -size/10 } ;
+      var destiny = { p : size/10 } ;
+      var that = this;
 
-    var animation = new TWEEN.Tween(origin)
-      .to(destiny, 1000) //1 segundo
-      .onUpdate (function(){
-          that.t1.position.y = origin.p;
-          that.t2.position.y = origin.p;
-          that.i.position.y = origin.p;
-      })
-      .repeat(Infinity)
-      .yoyo(true)
-      .start();
-
-      //Animaciones con TWEEN
-      var origin2 = { p : size/10 } ;
-      var destiny2 = { p : -size/10 } ;
-
-      var animation2 = new TWEEN.Tween(origin2)
-        .to(destiny2, 1000) //1 segundo
+      var animation = new TWEEN.Tween(origin)
+        .to(destiny, 1000) //1 segundo
         .onUpdate (function(){
-            that.e.position.y = origin2.p;
-            that.r.position.y = origin2.p;
-            that.s.position.y = origin2.p;
+            that.t1.position.y = origin.p;
+            that.t2.position.y = origin.p;
+            that.i.position.y = origin.p;
         })
         .repeat(Infinity)
         .yoyo(true)
         .start();
+
+        //Animaciones con TWEEN
+        var origin2 = { p : size/10 } ;
+        var destiny2 = { p : -size/10 } ;
+
+        var animation2 = new TWEEN.Tween(origin2)
+          .to(destiny2, 1000) //1 segundo
+          .onUpdate (function(){
+              that.e.position.y = origin2.p;
+              that.r.position.y = origin2.p;
+              that.s.position.y = origin2.p;
+          })
+          .repeat(Infinity)
+          .yoyo(true)
+          .start();
+    }
 
   }
 

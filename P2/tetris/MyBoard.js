@@ -25,6 +25,16 @@ class MyBoard extends THREE.Object3D {
       }
     }
 
+    var fontURL = '../fonts/helvetiker_regular.typeface.json';
+
+    var textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5.5,1);
+    var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5,MyMaterial.WHITE,fontURL);
+    this.add(nextPieceText);
+
+    textPosition = new THREE.Vector3(MyBoard.WIDTH+2,7.5,1);
+    var savedPieceText = new MyText(textPosition,'HOLD',0.5,MyMaterial.WHITE,fontURL);
+    this.add(savedPieceText);
+
     // GAME OVER
     this.gameOver = false;
 

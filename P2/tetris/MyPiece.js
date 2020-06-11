@@ -94,31 +94,31 @@ class MyPiece extends THREE.Object3D {
 
     switch (this.type){
       case 'L':
-        material = MyMaterial.ORANGE;
+        material = MyMaterial.ORANGEBRICK;
       break;
 
       case 'J':
-        material = MyMaterial.BLUE;
+        material = MyMaterial.BLUEBRICK;
       break;
 
       case 'S':
-        material = MyMaterial.GREEN;
+        material = MyMaterial.GREENBRICK;
       break;
 
       case 'Z':
-        material = MyMaterial.RED;
+        material = MyMaterial.REDBRICK;
       break;
 
       case 'T':
-        material = MyMaterial.PURPLE;
+        material = MyMaterial.PURPLEBRICK;
       break;
 
       case 'I':
-        material = MyMaterial.CYAN;
+        material = MyMaterial.CYANBRICK;
       break;
 
       case 'O':
-        material = MyMaterial.YELLOW;
+        material = MyMaterial.YELLOWBRICK;
       break;
     }
 

@@ -9,7 +9,7 @@ class MyControls{
     this.moveDownKey = 40; //Flecha Abajo
 
     this.hardDropKey = 32; //Espacio
-    this.savePieceKey = 72; //H
+    this.savePieceKey = 87; //W
   }
 
   manager(keyCode, game){
@@ -17,7 +17,7 @@ class MyControls{
     if (keyCode == this.rotateRightKey ){game.board.rotatePiece('R');} //E
 
     if (keyCode == this.hardDropKey ){game.hardDrop();} //Espacio
-    if (keyCode == this.savePieceKey ){game.board.holdPiece();} //H
+    if (keyCode == this.savePieceKey ){game.board.holdPiece();} //W
 
     if (keyCode == this.moveLeftKey ){game.board.movePiece(-1);} //Flecha Izquierda
     if (keyCode == this.moveRightKey ){game.board.movePiece(1);} //Flecha Derecha
