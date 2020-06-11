@@ -28,7 +28,7 @@ class MyScene extends THREE.Scene {
       sound.setBuffer( buffer );
       sound.setLoop( true );
       sound.setVolume( 0.1 );
-      sound.play();
+      //sound.play();
     });
 
   }
@@ -162,7 +162,7 @@ class MyScene extends THREE.Scene {
   onKeyDown(event){
     var key = event.which || event.keyCode;
 
-    //console.log(key);
+    console.log(key);
 
     if (key == 49 ){this.changeCamera(1);}
     else if (key == 50 ){this.changeCamera(2);}

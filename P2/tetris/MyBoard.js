@@ -44,7 +44,7 @@ class MyBoard extends THREE.Object3D {
     this.justSaved = false;
   }
 
-  savePiece(){
+  holdPiece(){
     if(!this.gameOver){
       if(!this.justSaved){
         if(this.savedPiece == null){

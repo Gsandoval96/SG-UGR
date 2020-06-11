@@ -11,7 +11,7 @@ class MyRoundShape extends THREE.Object3D {
       steps: 1,
       bevelSize: radius,
       bevelThickness: 0,
-      curveSegments: 0
+      curveSegments: 4
     };
 
     var shape = new THREE.Shape();

@@ -15,6 +15,67 @@ class MyGame extends THREE.Object3D {
     this.title = new MyTitle(titlePos,2);
     this.add(this.title);
 
+    // Controles
+
+
+    this.materialText = MyMaterial.WHITE;
+    this.fontURL = '../fonts/helvetiker_regular.typeface.json';
+
+    var textPosition = new THREE.Vector3(-10,19,1);
+    var controlsText = new MyText(textPosition,'CONTROLS',1,this.materialText,this.fontURL);
+    this.add(controlsText);
+
+    pos = new THREE.Vector3(-6,16,1);
+    adjust = new THREE.Vector3(1.25,0.4,1);
+    this.keyLEFT = new MyKeyObj(pos,9,4,'LEFT', adjust);
+    this.add(this.keyLEFT);
+
+    pos = new THREE.Vector3(-3.5,16,1);
+    adjust = new THREE.Vector3(0.25,0.4,1);
+    this.keyRIGHT = new MyKeyObj(pos,9,4,'RIGHT', adjust);
+    this.add(this.keyRIGHT);
+
+    pos = new THREE.Vector3(-4.75,14.5,1);
+    adjust = new THREE.Vector3(-0.1,0.4,1);
+    this.keyDOWN = new MyKeyObj(pos,9,4,'DOWN', adjust);
+    this.add(this.keyDOWN);
+
+    textPosition = new THREE.Vector3(-10,15.25,1);
+    var movePieceText = new MyText(textPosition,'MOVE',0.5,this.materialText,this.fontURL);
+    this.add(movePieceText);
+
+    pos = new THREE.Vector3(-5.125,12,1);
+    adjust = new THREE.Vector3(0.5,0.4,1);
+    this.keyQ = new MyKeyObj(pos,4,4,'Q', adjust);
+    this.add(this.keyQ);
+
+    pos = new THREE.Vector3(-3.375,12,1);
+    adjust = new THREE.Vector3(0.75,0.4,1);
+    this.keyE = new MyKeyObj(pos,4,4,'E', adjust);
+    this.add(this.keyE);
+
+    textPosition = new THREE.Vector3(-10.375,12,1);
+    var rotatePieceText = new MyText(textPosition,'ROTATE',0.5,this.materialText,this.fontURL);
+    this.add(rotatePieceText);
+
+    pos = new THREE.Vector3(-4.25,9.5,1);
+    adjust = new THREE.Vector3(0.5,0.4,1);
+    this.keyH = new MyKeyObj(pos,4,4,'H', adjust);
+    this.add(this.keyH);
+
+    textPosition = new THREE.Vector3(-10,9.5,1);
+    var holdPieceText = new MyText(textPosition,'HOLD',0.5,this.materialText,this.fontURL);
+    this.add(holdPieceText);
+
+    var pos = new THREE.Vector3(-5,7,1);
+    var adjust = new THREE.Vector3(1,0.4,1);
+    this.keySPACE = new MyKeyObj(pos,12,4,'SPACE', adjust);
+    this.add(this.keySPACE);
+
+    textPosition = new THREE.Vector3(-10,7,1);
+    var dropPieceText = new MyText(textPosition,'DROP',0.5,this.materialText,this.fontURL);
+    this.add(dropPieceText);
+
     // Game Manager
 
     this.gameOver = false;
@@ -29,15 +90,12 @@ class MyGame extends THREE.Object3D {
     this.lineValue = [0,1,3,5,8];
 
     // Gravity parameters
-    this.speed = 1500; //1.5 segundos
-    this.speedUp = 0.9; //10% más rápido/nivel
+    this.speed = 2000; //2 segundos
+    this.speedUp = 0.75; //25% más rápido/nivel
 
     // TextGeometry
 
-    this.materialText = MyMaterial.WHITE;
-    this.fontURL = '../fonts/helvetiker_regular.typeface.json';
-
-    var textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5.5,1);
+    textPosition = new THREE.Vector3(MyBoard.WIDTH+2,MyBoard.HEIGHT-5.5,1);
     var nextPieceText = new MyText(textPosition,'NEXT\nPIECE',0.5,this.materialText,this.fontURL);
     this.add(nextPieceText);
 
