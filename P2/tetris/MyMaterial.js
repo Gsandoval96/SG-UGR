@@ -1,7 +1,7 @@
 class MyMaterial {
 
   static loader = new THREE. TextureLoader ( ) ;
-  static textura = MyMaterial.loader.load ( '../img/brickB.jpg' ) ;
+  static textura = MyMaterial.loader.load ( '../img/brick.jpg' ) ;
 
   static REDBRICK = new THREE.MeshStandardMaterial({color: 0xFF0000, map:MyMaterial.textura});
   static GREENBRICK = new THREE.MeshStandardMaterial({color: 0x00FF00, map:MyMaterial.textura});
