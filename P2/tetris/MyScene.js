@@ -14,7 +14,13 @@ class MyScene extends THREE.Scene {
 
     // Creamos el tablero y lo añadimos a la escena
     this.game = new MyGame();
-    this.add (this.game);
+    //this.add (this.game);
+
+    this.menu = new MyMenu();
+    this.add (this.menu);
+
+    this.pickableObjects = [];
+    this.pickableObjects.push(this.menu.keyPLAY);
 
     this.controls = new MyControls();
 
@@ -172,6 +178,47 @@ class MyScene extends THREE.Scene {
     else {this.controls.manager(key, this.game);}
   }
 
+  onMouseMove(event){
+
+    var mouse = new THREE.Vector2();
+    mouse.x = (event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = 1 - 2 * (event.clientY / window.innerHeight );
+
+    var raycaster = new THREE.Raycaster() ;
+    raycaster.setFromCamera(mouse, this.getCamera());
+    var pickedObjects = raycaster.intersectObjects(this.pickableObjects,true);
+
+    if(pickedObjects.length > 0){
+      if(!pickedObjects[0].object.userData.userData.selected)
+        pickedObjects[0].object.userData.userData.select();
+    }
+    else{
+      for(var i=0; i<this.pickableObjects.length; i++){
+        if(this.pickableObjects[i].selected)
+          this.pickableObjects[i].deselect();
+      }
+    }
+  }
+
+  onMouseClick(event){
+
+    var mouse = new THREE.Vector2();
+    mouse.x = (event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = 1 - 2 * (event.clientY / window.innerHeight );
+
+    var raycaster = new THREE.Raycaster() ;
+    raycaster.setFromCamera(mouse, this.getCamera());
+    var pickedObjects = raycaster.intersectObjects(this.pickableObjects,true);
+
+    if(pickedObjects.length > 0){
+      this.remove(this.menu);
+      this.game.startGame();
+      this.add(this.game);
+    }
+  }
+
+
+
   update () {
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
 
@@ -183,6 +230,7 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
 
     this.game.update();
+    this.menu.update();
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
@@ -195,9 +243,11 @@ $(function () {
   // Se instancia la escena pasándole el  div  que se ha creado en el html para visualizar
   var scene = new MyScene("#WebGL-output");
 
-  // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
+  // Se añaden los listener de la aplicación.
   window.addEventListener ("resize", () => scene.onWindowResize());
   window.addEventListener ("keydown", (event) => scene.onKeyDown(event));
+  window.addEventListener ("mousemove", (event) => scene.onMouseMove(event));
+  window.addEventListener ("click", (event) => scene.onMouseClick(event));
 
   // Que no se nos olvide, la primera visualización.
   scene.update();

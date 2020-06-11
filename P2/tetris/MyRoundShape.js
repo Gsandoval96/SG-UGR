@@ -25,6 +25,7 @@ class MyRoundShape extends THREE.Object3D {
 
     geometry.translate(pos.x, pos.y, pos.z);
     this.roundBox = new THREE.Mesh( geometry, material) ;
+    this.roundBox.userData = this;
     this.add(this.roundBox);
   }
 }

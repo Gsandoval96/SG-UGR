@@ -121,7 +121,9 @@ class MyGame extends THREE.Object3D {
     this.timeValueTextPosition = new THREE.Vector3(MyBoard.WIDTH+3.75,4,1);
     this.timeValueText = new MyText(this.timeValueTextPosition,this.time.toString(),0.5,this.materialText,this.fontURL);
     this.add(this.timeValueText);
+  }
 
+  startGame(){
     //Animation
     this.startGravityAnimation();
     this.startTimeAnimation();
@@ -381,8 +383,8 @@ class MyGame extends THREE.Object3D {
   }
 
   update(){
-    if(this.board.clearedRows != 0) this.checkClearedRows();
-    if(this.board.gameOver && !this.gameOver) this.launchGameOver();
-    TWEEN.update();
+      if(this.board.clearedRows != 0) this.checkClearedRows();
+      if(this.board.gameOver && !this.gameOver) this.launchGameOver();
+      TWEEN.update();
   }
 }

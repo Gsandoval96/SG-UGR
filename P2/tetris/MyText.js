@@ -21,6 +21,7 @@ class MyText extends THREE.Object3D {
     	});
 
       var mesh = new THREE.Mesh(geometry, mat);
+      mesh.userData = that;
       mesh.position.set(pos.x, pos.y, pos.z);
 
       that.add(mesh);
