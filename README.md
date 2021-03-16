@@ -16,6 +16,8 @@
 - Práctica 1. Realización de diversos ejercicios prácticos.
 - Práctica 2. Diseño, implementación y entrega de un sistema gráfico de libre elección
 
+Para ejecutarlo, ejecutar en la carpeta del proyecto `python -m http.server` y abrir en el navegador la dirección localhost:8000.
+
 ---
 
 ## Evaluación
